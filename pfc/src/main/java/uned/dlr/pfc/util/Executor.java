@@ -1,25 +1,30 @@
 package uned.dlr.pfc.util;
 
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.EvaluatorException;
+import org.mozilla.javascript.ScriptableObject;
 
-import sun.org.mozilla.javascript.internal.Context;
-import sun.org.mozilla.javascript.internal.ScriptableObject;
 import sun.org.mozilla.javascript.internal.annotations.JSFunction;
-
 
 public class Executor implements ExecutorIF {
 
-	public String execute(String code) {
+	public String execute(String code,String name) {
 		 PfcEngine pfc =new PfcEngine();
 		 Context cx = Context.enter();
 		  // Set version to JavaScript1.2 so that we get object-literal style
          // printing instead of "[object Object]"
-         cx.setLanguageVersion(Context.VERSION_1_2);
+         cx.setLanguageVersion(Context.VERSION_1_7);
          cx.initStandardObjects(pfc);
          String[] names = {"log","version"};
          pfc.defineFunctionProperties(names, PfcEngine.class, ScriptableObject.DONTENUM);
 	
-		 Object result = cx.evaluateString(pfc, code,"MySource", 1, null);
-         System.out.println("result: " + result);
+		 Object result = null;
+		 try{
+		   result =cx.evaluateString(pfc, code,name, 1, null);
+		 }catch(EvaluatorException e){
+		   result= evaluatorExceptiontoString(e);
+		 }
+		 System.out.println("result: " + result);
          return result.toString();
 	}
 	
@@ -40,6 +45,17 @@ public class Executor implements ExecutorIF {
 		public String getClassName() {
 			return this.getClassName();
 		}
+	}
+	public String evaluatorExceptiontoString(EvaluatorException e) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ERROR: [linea:");
+		builder.append(e.lineNumber());
+		builder.append(", columna:");
+		builder.append(e.columnNumber());
+		builder.append("] ");
+		builder.append(e.getMessage());
+		
+		return builder.toString();
 	}
 
 }

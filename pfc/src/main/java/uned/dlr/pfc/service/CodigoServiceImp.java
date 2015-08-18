@@ -26,7 +26,10 @@ public class CodigoServiceImp implements CodigoServiceIF {
 
 	public String ejecutar(Long id) {
 		Codigo codigo=codigoDao.getCodigo(id);
-		return executor.execute(codigo.getCode());
+		return executor.execute(codigo.getCode(),codigo.getNombre());
+	}
+	public String ejecutar(String codigo) {
+		return executor.execute(codigo,"");
 	}
 
 	public String minificar(Long id) {

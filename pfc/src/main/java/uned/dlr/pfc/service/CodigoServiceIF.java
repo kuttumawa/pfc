@@ -14,6 +14,7 @@ public interface CodigoServiceIF {
 	public String ofuscar(Long id);
 	public Proyecto compartir(Codigo code,User user1,User user2,String descripcion);
 	public Codigo getCodigo(Long id);
+	public String ejecutar(String codigo);
 	
 
 }

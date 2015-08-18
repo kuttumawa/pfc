@@ -11,6 +11,6 @@ public interface ExecutorIF {
 	 * @param code
 	 * @return 
 	 */
-	public String execute(String code);
+	public String execute(String code,String name);
 
 }

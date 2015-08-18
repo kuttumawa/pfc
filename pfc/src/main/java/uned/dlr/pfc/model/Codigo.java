@@ -14,6 +14,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Null;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 
 @Entity
@@ -21,7 +24,9 @@ import javax.persistence.Table;
 public class Codigo {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Null
 	Long id;
+	@NotEmpty
 	String nombre;
 	String code;
 	@OneToOne
