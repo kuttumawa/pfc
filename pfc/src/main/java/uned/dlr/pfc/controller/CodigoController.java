@@ -25,7 +25,13 @@ import uned.dlr.pfc.service.CodigoServiceIF;
 @RestController
 public class CodigoController {
 
-	String CODIGO = "log('hello there!)";
+	String CODIGO = "var numero = prompt(\"Introduce un número y se mostrará su factorial\");"
+					+"\nvar resultado = 1;"
+					+"\n" 
+					+"\nfor(var i=1; i<=numero; i++) {"
+					+"\n  resultado *= i;"
+					+"\n}"
+					+"\nalert(resultado);";
 	@Inject
 	private CodigoServiceIF codigoService;
 
@@ -48,7 +54,6 @@ public class CodigoController {
 
 	@RequestMapping(value = "/codigos/{codigoId}/ejecutar", method = RequestMethod.GET)
 	public ResponseEntity<String> ejecutarCodigo(@PathVariable Long codigoId) throws Throwable {
-		Codigo codigo=existeCodigo(codigoId);
 		String resultado = codigoService.ejecutar(codigoId);
 		return new ResponseEntity<String>(resultado, HttpStatus.OK);
 	}
@@ -60,7 +65,7 @@ public class CodigoController {
 		URI newCodigoUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(codigo.getId())
 				.toUri();
 		responseHeaders.setLocation(newCodigoUri);
-		return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<>(codigo, responseHeaders, HttpStatus.CREATED);
 	}
 
 	protected Codigo existeCodigo(Long codigoId) throws RecursoNoEncontradoException {
