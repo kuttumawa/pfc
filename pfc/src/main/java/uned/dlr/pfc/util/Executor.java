@@ -57,5 +57,9 @@ public class Executor implements ExecutorIF {
 		
 		return builder.toString();
 	}
+	@Override
+	public String execute(String code) {
+		return execute(code,"default");
+	}
 
 }

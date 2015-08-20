@@ -1,10 +1,6 @@
 package uned.dlr.pfc.util;
 
-/**
- * Create enviroment.
- * Execute js code.
- *
- */
+
 public interface ExecutorIF {
 	
 	/**
@@ -12,5 +8,6 @@ public interface ExecutorIF {
 	 * @return 
 	 */
 	public String execute(String code,String name);
+	public String execute(String code);
 
 }
