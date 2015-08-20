@@ -20,7 +20,7 @@
 </ul>
 </div>
 <div id="section">
-<div id="erroresId"></div>
+<div id="currentStatusMsgId"></div>
 <h2>Código: <span id="codigoNombreId"></span></h2>
 <p>
 <textarea id="codigoAreaId" rows="20" cols="75"></textarea>

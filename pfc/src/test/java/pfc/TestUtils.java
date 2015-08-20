@@ -10,7 +10,10 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import uned.dlr.pfc.model.User;
 import uned.dlr.pfc.service.UserServiceIF;
+import uned.dlr.pfc.util.Executor;
+import uned.dlr.pfc.util.ExecutorIF;
 import uned.dlr.pfc.util.JSLintExecutor;
+import uned.dlr.pfc.util.YUIExecutor;
 
 public class TestUtils {
 
@@ -27,11 +30,26 @@ public class TestUtils {
 	public static void tearDownAfterClass() throws Exception {
 	
 	}
+	
+	@Test
+	public void testJSExecutor() {
+		ExecutorIF jsExecutor=new Executor();
+		String resultado=jsExecutor.execute(CODIGO);
+		System.out.println(resultado);
+		
+	}
 
 	@Test
 	public void testJsLInt() {
-		JSLintExecutor lint=new JSLintExecutor();
+		ExecutorIF lint=new JSLintExecutor();
 		String resultado=lint.execute(CODIGO);
+		System.out.println(resultado);
+		
+	}
+	@Test
+	public void testYUICompressor() {
+		ExecutorIF yui=new YUIExecutor();
+		String resultado=yui.execute(CODIGO);
 		System.out.println(resultado);
 		
 	}

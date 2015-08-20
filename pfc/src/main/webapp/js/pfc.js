@@ -1,8 +1,8 @@
 
 var currentCodigo;
-var currentError;
+var currentStatusMsg;
 var currentUser ={"id":null,"nombre":"user1"};
-var currentProyecto={"nombre":"Proyecto X","descripcion":"El proyecto X es cool"};
+var currentProyecto={"id":"","nombre":"X","descripcion":"XX"}
 
 function actualizar(){
 	if(currentCodigo){
@@ -18,10 +18,10 @@ function actualizar(){
    	 $('#testNombreId').text('');
    	    $('#testAreaId').val('');
 	}
-	if(currentError){
-		$('#erroresId').text(currentError);
+	if(currentStatusMsg){
+		$('#currentStatusMsgId').text(currentStatusMsg);
 	}else{
-		$('#erroresId').text('');
+		$('#currentStatusMsgId').text('');
 	}
 	
 }
@@ -37,14 +37,14 @@ function getCodigo(id){
 	         contentType: "application/json; charset=utf-8",
 	         dataType: "json",
 	         success: function (codigo, status, jqXHR) {
-	        	 currentError=null;
+	        	 currentStatusMsg=null;
 	        	 currentCodigo=codigo;
 	        	 actualizar();
 	         },
 
 	         error: function (jqXHR, status) {
-	        	 currentError="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
-	        	 console.log(currentError);
+	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
+	        	 console.log(currentStatusMsg);
 	        	 actualizar();
 	         }
 	   });
@@ -60,14 +60,14 @@ function createCodigo(){
 	         data: JSON.stringify({"nombre":"PruebaPost","code":$('#codigoAreaId').val()}),
 	         dataType: "json",
 	         success: function (codigo, status, jqXHR) {
-	        	 currentError=null;
+	        	 currentStatusMsg="Creado "+codigo.nombre;
 	        	 currentCodigo=codigo;
 	        	 actualizar();
 	         },
 
 	         error: function (jqXHR, status) {
-	        	 currentError="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
-	        	 console.log(currentError);
+	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
+	        	 console.log(currentStatusMsg);
 	             actualizar();
 	         }
 	   });
@@ -82,12 +82,12 @@ function borrarCodigo(id){
 	         contentType: "application/json; charset=utf-8",
 	         dataType: "json",
 	         success: function (codigo, status, jqXHR) {
-	        	 currentCodigo=null;
+	        	 currentCodigo="Borrado OK";
 	        	 actualizar();
 	         },
 	         error: function (jqXHR, status) {
-	        	 currentError="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
-	             console.log(currentError);
+	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
+	             console.log(currentStatusMsg);
 	             actualizar();
 	         }
 	   });
@@ -100,17 +100,17 @@ function createProyecto(){
 	         type: "POST",
 	         url: "http://localhost:8080/pfc/v1/proyectos",
 	         contentType: "application/json; charset=utf-8",
-	         data: currentProyecto,
+	         data: JSON.stringify(currentProyecto),
 	         dataType: "json",
 	         success: function (proyecto, status, jqXHR) {
-	        	 currentError=null;
+	        	 currentStatusMsg="Creado proyecto " + proyecto.nombre;
 	        	 currentProyecto=proyecto;
 	        	 actualizarProyecto();
 	         },
 
 	         error: function (jqXHR, status) {
-	        	 currentError="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
-	        	 console.log(currentError);
+	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
+	        	 console.log(currentStatusMsg);
 	             actualizar();
 	         }
 	   });

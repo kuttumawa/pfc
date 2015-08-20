@@ -11,9 +11,7 @@ public class Executor implements ExecutorIF {
 	public String execute(String code,String name) {
 		 PfcEngine pfc =new PfcEngine();
 		 Context cx = Context.enter();
-		  // Set version to JavaScript1.2 so that we get object-literal style
-         // printing instead of "[object Object]"
-         cx.setLanguageVersion(Context.VERSION_1_7);
+	     cx.setLanguageVersion(Context.VERSION_1_7);
          cx.initStandardObjects(pfc);
          String[] names = {"log","version"};
          pfc.defineFunctionProperties(names, PfcEngine.class, ScriptableObject.DONTENUM);
@@ -30,7 +28,9 @@ public class Executor implements ExecutorIF {
 	
 	private class PfcEngine extends ScriptableObject{
 		
-	    StringBuffer sb=new StringBuffer();
+	   
+		private static final long serialVersionUID = 1L;
+		StringBuffer sb=new StringBuffer();
 		@JSFunction
 		public String version(){
 			return "v1.3.3 DLR 2014\n";
