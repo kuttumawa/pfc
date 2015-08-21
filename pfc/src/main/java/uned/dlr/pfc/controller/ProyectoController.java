@@ -1,6 +1,7 @@
 package uned.dlr.pfc.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -36,6 +38,11 @@ public class ProyectoController {
 	public ResponseEntity<Proyecto> getProyecto(@PathVariable Long proyectoId) {
 		Proyecto proyecto =existeProyecto(proyectoId);
 		return new ResponseEntity<Proyecto>(proyecto, HttpStatus.OK);
+	}
+	@RequestMapping(value = "/proyectos", method = RequestMethod.GET)
+	public ResponseEntity<List<Proyecto>> getProyectos(@RequestParam("userId") Long userId) {
+		List<Proyecto> proyectos = proyectoService.getProyectosUser(userId);
+		return new ResponseEntity<List<Proyecto>>(proyectos, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/proyectos/{proyectoId}", method = RequestMethod.DELETE)

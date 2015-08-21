@@ -2,6 +2,8 @@ package pfc;
 
 import static org.junit.Assert.*;
 
+import java.util.List;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -40,6 +42,8 @@ public class TestProyecto  {
 		Proyecto proyecto=new Proyecto("p"+proyectoCount++,user);;
 		proyecto=proyectoService.crear(proyecto);
 		assertNotNull(proyecto);
+		List<Proyecto> proyectos=proyectoService.getProyectosUser(user.getId());
+		assertTrue(proyectos.size()>0);
 		return proyecto;
 	}
 	

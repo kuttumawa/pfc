@@ -36,6 +36,11 @@ public class ProyectoDao {
 		Proyecto ent = em.find(Proyecto.class, id);
 		em.remove(ent); 
 	}
+
+	public List<Proyecto> getAll(Long userId) {
+		return em.createQuery("SELECT p FROM Proyecto p where p.user.id=:userId order by p.nombre", Proyecto.class)
+				.setParameter("userId", userId).getResultList();
+	}
 	
 	
 }

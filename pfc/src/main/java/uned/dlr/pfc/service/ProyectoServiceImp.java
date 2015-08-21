@@ -1,6 +1,7 @@
 package uned.dlr.pfc.service;
 
 import java.util.Iterator;
+import java.util.List;
 
 import uned.dlr.pfc.dao.CodigoDao;
 import uned.dlr.pfc.dao.ProyectoDao;
@@ -73,6 +74,11 @@ public class ProyectoServiceImp implements ProyectoServiceIF{
 		}
 
 		
+	}
+
+	@Override
+	public List<Proyecto> getProyectosUser(Long userId) {
+		return proyectoDao.getAll(userId);
 	}
 
 }

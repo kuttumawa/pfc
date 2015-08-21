@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name="proyecto")
@@ -23,7 +24,15 @@ public class Proyecto {
 	String descripcion;
 	@ManyToOne
 	User user;
-	
+	@Transient
+	String tree=" [{\"label\": \"node1\",\"children\": [{ \"label\": \"child1\" },{ \"label\": \"child2\" }]},"
+	                        +"{\"label\": \"node2\",\"children\": [{ \"label\": \"child3\" }]}]";
+	public String getTree() {
+		return tree;
+	}
+	public void setTree(String tree) {
+		this.tree = tree;
+	}
 	@ManyToMany(fetch=FetchType.EAGER)
 	List<Codigo> codigos;
 	
