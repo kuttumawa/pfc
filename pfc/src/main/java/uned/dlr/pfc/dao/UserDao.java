@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import uned.dlr.pfc.model.Proyecto;
 import uned.dlr.pfc.model.User;
 
 @Transactional
@@ -35,6 +36,11 @@ public class UserDao {
 	public void deleteById(Long id) throws Exception {
 		User ent = em.find(User.class, id);
 		em.remove(ent); 
+	}
+
+	public List<User> find(String usuario,String pass) {
+		return em.createQuery("SELECT p FROM User p where p.nombre=:usuario and p.password=:pass order by p.nombre ", User.class)
+				.setParameter("usuario", usuario).setParameter("pass", pass).getResultList();
 	}
 	
 	

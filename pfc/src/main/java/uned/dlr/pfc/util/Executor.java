@@ -3,8 +3,9 @@ package uned.dlr.pfc.util;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
 import org.mozilla.javascript.ScriptableObject;
+import org.mozilla.javascript.annotations.JSFunction;
 
-import sun.org.mozilla.javascript.internal.annotations.JSFunction;
+
 
 public class Executor implements ExecutorIF {
 

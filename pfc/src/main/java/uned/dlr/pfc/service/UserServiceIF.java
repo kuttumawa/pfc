@@ -7,5 +7,6 @@ public interface UserServiceIF {
 	public User actualizar(User user);
 	public void borrar(Long userId) throws Exception;
 	public User get(Long id);
+	public User find(String user,String pass);
 
 }

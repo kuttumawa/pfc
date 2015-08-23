@@ -1,5 +1,9 @@
 package uned.dlr.pfc.service;
 
+
+
+import java.util.List;
+
 import uned.dlr.pfc.dao.UserDao;
 import uned.dlr.pfc.model.User;
 
@@ -30,6 +34,13 @@ public class UserServiceImp implements UserServiceIF {
 	@Override
 	public User get(Long id) {
 		return userDao.getUser(id);
+	}
+
+	@Override
+	public User find(String user,String pass) {
+		List<User> users= userDao.find(user,pass);
+		if (!users.isEmpty()) return users.get(0);
+		return null;
 	}
 
 }

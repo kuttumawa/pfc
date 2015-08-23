@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -33,6 +34,12 @@ public class UserController {
 	public ResponseEntity<User> getUser(@PathVariable Long userId) {
 		User user = existeUser(userId);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	public ResponseEntity<User> getUserConPassword(@RequestParam("user") String user,@RequestParam("pass") String pass) {
+		User u = existeUserConPassword(user,pass);
+		return new ResponseEntity<User>(u, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/users/{userId}", method = RequestMethod.DELETE)
@@ -58,6 +65,13 @@ public class UserController {
 			throw new RecursoNoEncontradoException("No existe el usuario con id " + userId);
 		}
 		return user;
+	}
+	protected User existeUserConPassword(String user,String pass) throws RecursoNoEncontradoException {
+		User u = userService.find(user,pass);
+		if (u == null) {
+			throw new RecursoNoEncontradoException("No existe  usuario " + user);
+		}
+		return u;
 	}
 
 	public static void main(String[] args) {

@@ -13,13 +13,23 @@ public class CodigoServiceImp implements CodigoServiceIF {
 	private CodigoDao codigoDao;
 	private ProyectoDao proyectoDao;
 	private ExecutorIF executor; 
+	private ExecutorIF lint;
 
 	
+	public ExecutorIF getLint() {
+		return lint;
+	}
+	public void setLint(ExecutorIF lint) {
+		this.lint = lint;
+	}
 	public Codigo crear(Codigo codigo){
 		codigoDao.save(codigo);
 		return codigo;
 	}
 	public Codigo actualizar(Codigo codigo){
+		if(codigo.getTest()!=null && codigo.getTest().getId()==null){
+			codigoDao.saveTest(codigo.getTest());
+		}
 		codigoDao.save(codigo);
 		return codigo;
 	}
@@ -38,8 +48,8 @@ public class CodigoServiceImp implements CodigoServiceIF {
 	}
 
 	public String revisar(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Codigo codigo=codigoDao.getCodigo(id);
+		return lint.execute(codigo.getCode(),codigo.getNombre());
 	}
 
 	public String ofuscar(Long id) {

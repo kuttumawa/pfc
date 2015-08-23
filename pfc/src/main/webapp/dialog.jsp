@@ -1,5 +1,5 @@
-<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="css/jquery-ui.css">
+<script src="js/jquery-ui.min.js"></script>
   
   <style>
    /* body { font-size: 62.5%; }*/
@@ -15,11 +15,17 @@
   </style>
   <script>
   $(function() {
-    var dialog, form,
+    var dialog,dialogLogin,dialogSignup, form,
  
       name = $( "#name" ),
       descripcion = $( "#descripcion" ),
-      allFields = $( [] ).add( name ).add( descripcion ),
+      login_user = $( "#login_user" ),
+      login_password = $( "#login_password" ),
+      signup_user = $( "#signup_user" ),
+      signup_password = $( "#signup_password" ),
+      signup_password_bis = $( "#signup_password_bis" ),
+      allFields = $( [] ).add( name ).add( descripcion ).add( login_user ).
+                   add( login_password ).add( signup_user ).add( signup_password ).add( signup_password_bis ),
       tips = $( ".validateTips" );
     var x=1;
     function updateTips( t ) {
@@ -51,21 +57,50 @@
         return true;
       }
     }
+    function checkEquals( o, p, n ) {
+        if ( !(o.val()===p.val())) {
+          o.addClass( "ui-state-error" );
+          p.addClass( "ui-state-error" );
+          updateTips( n );
+          return false;
+        } else {
+          return true;
+        }
+      }
  
-    function crear() {
+    function doit() {
       var valid = true;
       allFields.removeClass( "ui-state-error" );
  
-      valid = valid && checkLength( name, "username", 3, 16 );
-      valid = valid && checkLength( descripcion, "descripcion", 5, 16 );
- 
-      valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
-      valid = valid && checkRegexp( descripcion, /^([0-9a-zA-Z])+$/, "descripcion field only allow : a-z 0-9" );
- 
+     
+     // valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
+     // valid = valid && checkRegexp( descripcion, /^([0-9a-zA-Z])+$/, "descripcion field only allow : a-z 0-9" );
+      
+      if(x==1){
+    	  valid = valid && checkLength( name, "username", 1, 16 );
+          valid = valid && checkLength( descripcion, "descripcion", 0, 250 );
+      }else if (x==2){
+    	  valid = valid && checkLength( name, "username", 1, 16 );
+          valid = valid && checkLength( descripcion, "descripcion", 0, 250 );
+	  }else if (x==3){//login
+  		valid = valid && checkLength( login_user, "user", 3, 16 )&& checkLength( login_password, "password", 3, 16 );
+  	  }else if (x==4){//sign up
+  		valid = valid && checkLength( signup_user, "user", 3, 16 )&& checkLength( signup_password, "password", 3, 16 );
+  	    valid = valid && checkEquals(signup_password,signup_password_bis,"Passwords diferentes");
+  	  }
+     
+     
       if ( valid ) {
     	if(x==1) createProyecto(name.val(),descripcion.val());
-    	else{
-    		alert('createCodigo');
+    	else if (x==2){
+    		createCodigo(name.val(),descripcion.val());
+    	}
+    	else if (x==3){//login
+    		loginUsuario(login_user.val(),login_password.val());
+    		dialogLogin.dialog( "close" );
+    	}else if (x==4){//sign up
+    		createUsuario(signup_user.val(),signup_password.val());
+    		dialogSignup.dialog( "close" );
     	}
            
         dialog.dialog( "close" );
@@ -79,16 +114,48 @@
       width: 350,
       modal: true,
       buttons: {
-        "Crear": crear,
+        "Crear": doit,
         Cancel: function() {
           dialog.dialog( "close" );
         }
       },
       close: function() {
-        form[ 0 ].reset();
+    	$('form')[0].reset();
         allFields.removeClass( "ui-state-error" );
       }
     });
+    dialogLogin = $( "#dialog-form-login" ).dialog({
+        autoOpen: false,
+        height: 400,
+        width: 450,
+        modal: true,
+        buttons: {
+          "Registrarse": doit,
+          Cancel: function() {
+        	  dialogLogin.dialog( "close" );
+          }
+        },
+        close: function() {
+          $('form')[1].reset();
+          allFields.removeClass( "ui-state-error" );
+        }
+      });
+     dialogSignup = $( "#dialog-form-signup" ).dialog({
+        autoOpen: false,
+        height: 400,
+        width: 450,
+        modal: true,
+        buttons: {
+          "Crear": doit,
+          Cancel: function() {
+        	  dialogSignup.dialog( "close" );
+          }
+        },
+        close: function() {
+          $('form')[2].reset();
+          allFields.removeClass( "ui-state-error" );
+        }
+      });
  
     form = dialog.find( "form" ).on( "submit", function( event ) {
       event.preventDefault();
@@ -103,6 +170,14 @@
         x=2;
     	dialog.dialog( "open" );
       });
+    $( "#create-login" ).button().on( "click", function() {
+        x=3;
+    	dialogLogin.dialog( "open" );
+      });
+    $( "#create-signup" ).button().on( "click", function() {
+        x=4;
+    	dialogSignup.dialog( "open" );
+      });
   });
   </script>
 <div id="dialog-form" title="Nuevo">
@@ -112,8 +187,42 @@
       <label for="name">Nombre</label>
       <input type="text" name="name" id="name" value="Jane Smith" class="text ui-widget-content ui-corner-all">
       <label for="descripcion">Descripción</label>
-      <input type="text" name="descripcion" id="descripcion" value="xxxxxxx" class="text ui-widget-content ui-corner-all">
+      <textarea id="descripcion" name="descripcion"  class="text ui-widget-content ui-corner-all"></textarea>
+      
+      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
  
+</div>
+
+<div id="dialog-form-login" title="Entrar">
+ <form>
+    <fieldset>
+      <div class="validateTips"></div>
+      <label for="login_user">Usuario</label>
+      <input type="text" name="login_user" id="login_user" value="" class="text ui-widget-content ui-corner-all">
+      <label for="login_password">Password</label>
+      <input type="password" name="login_password" id="login_password" value="" class="text ui-widget-content ui-corner-all">
+      
+      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
+</div>
+<div id="dialog-form-signup" title="Registrarse">
+ <form>
+    <fieldset>
+      <div class="validateTips"></div>
+      <label for="signup_user">Usuario</label>
+      <input type="text" name="signup_user" id="signup_user" value="" class="text ui-widget-content ui-corner-all">
+      <label for="name">Email</label>
+      <input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all">
+      <label for="signup_password">Password</label>
+      <input type="password" name="signup_password" id="signup_password" value="" class="text ui-widget-content ui-corner-all">
+      <label for="password">Confirmar Password</label>
+      <input type="password" name="signup_password_bis" id="signup_password_bis" value="" class="text ui-widget-content ui-corner-all">
+      
       <!-- Allow form submission with keyboard without duplicating the dialog button -->
       <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
     </fieldset>

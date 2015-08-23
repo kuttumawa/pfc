@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import uned.dlr.pfc.model.Codigo;
+import uned.dlr.pfc.model.PfcTest;
 import uned.dlr.pfc.service.CodigoServiceIF;
 
 public class TestCodigo {
@@ -35,10 +36,15 @@ public class TestCodigo {
 		;
 
 		nuevoCodigo = codigoService.crear(nuevoCodigo);
-
+     
 		assertTrue(nuevoCodigo.getPropietarios().size() > 0);
 		assertTrue(nuevoCodigo.getPropietarios().contains(13L));
+		
+		nuevoCodigo.setTest(new PfcTest("nombreTest") );
+		nuevoCodigo = codigoService.actualizar(nuevoCodigo);
+		assertNotNull(nuevoCodigo.getTest().getId());
 	}
+	
 
 	@Test
 	public void testBorrarCodigoNoCompartido() throws Exception {

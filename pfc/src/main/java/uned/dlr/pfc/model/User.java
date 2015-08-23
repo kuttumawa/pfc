@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name="user")
@@ -15,7 +16,7 @@ public class User {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	Long id;
 	String nombre;
-	@JsonIgnore
+	
 	String password;
 	
 	
@@ -35,9 +36,11 @@ public class User {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
+	@JsonProperty("password")
 	public void setPassword(String password) {
 		this.password = password;
 	}

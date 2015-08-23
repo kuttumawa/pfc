@@ -28,7 +28,6 @@ public class JSLintExecutor implements ExecutorIF {
 		try {
 			jsLint = applyJSlintSource();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

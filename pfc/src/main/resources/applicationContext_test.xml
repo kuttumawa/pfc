@@ -18,11 +18,13 @@
      <bean id="userDao" class="uned.dlr.pfc.dao.UserDao" />
      <bean id="proyectoDao" class="uned.dlr.pfc.dao.ProyectoDao" />
      <bean id="executor" class="uned.dlr.pfc.util.Executor"/>
+     <bean id="lint" class="uned.dlr.pfc.util.JSLintExecutor"/>
      
      <bean id="codigoService" class="uned.dlr.pfc.service.CodigoServiceImp" >
         <property name="codigoDao" ref="codigoDao"/>
         <property name="proyectoDao" ref="proyectoDao"/>
         <property name="executor" ref="executor"/>
+        <property name="lint" ref="lint"/>
      </bean>
      <bean id="proyectoService" class="uned.dlr.pfc.service.ProyectoServiceImp" >
         <property name="codigoDao" ref="codigoDao"/>

@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 
 import uned.dlr.pfc.model.Codigo;
+import uned.dlr.pfc.model.PfcTest;
 
 @Transactional
 public class CodigoDao {
@@ -35,6 +36,12 @@ public class CodigoDao {
 	public void deleteById(Long id) throws Exception {
 		Codigo ent = em.find(Codigo.class, id);
 		em.remove(ent); 
+	}
+
+	public void saveTest(PfcTest test) {
+		if(test.getId() == null) em.persist(test);
+		else em.merge(test);
+	
 	}
 	
 	

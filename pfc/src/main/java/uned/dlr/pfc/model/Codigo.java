@@ -24,7 +24,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 public class Codigo {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Null
 	Long id;
 	@NotEmpty
 	String nombre;

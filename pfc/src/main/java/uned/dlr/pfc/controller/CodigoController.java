@@ -37,12 +37,16 @@ public class CodigoController {
 
 	@RequestMapping(value = "/codigos/{codigoId}", method = RequestMethod.GET)
 	public ResponseEntity<Codigo> getCodigo(@PathVariable Long codigoId) {
-		Codigo c = new Codigo("PruebaDLR");
-		c.setCode(CODIGO);
-		codigoService.crear(c);
-		c =existeCodigo(codigoId);
+        existeCodigo(codigoId);
 		Codigo codigo = codigoService.getCodigo(codigoId);
 		return new ResponseEntity<Codigo>(codigo, HttpStatus.OK);
+	}
+	@RequestMapping(value = "/codigos/{codigoId}/execute", method = RequestMethod.GET)
+	public ResponseEntity<Resultado> executeCodigo(@PathVariable Long codigoId) {
+        existeCodigo(codigoId);
+		Resultado resultado=new Resultado();
+		resultado.setResultado(codigoService.ejecutar(codigoId));
+		return new ResponseEntity<Resultado>(resultado, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/codigos/{codigoId}", method = RequestMethod.DELETE)
@@ -57,10 +61,15 @@ public class CodigoController {
 		String resultado = codigoService.ejecutar(codigoId);
 		return new ResponseEntity<String>(resultado, HttpStatus.OK);
 	}
+	@RequestMapping(value = "/codigos/{codigoId}/revisar", method = RequestMethod.GET)
+	public ResponseEntity<String> lintCodigo(@PathVariable Long codigoId) throws Throwable {
+		String resultado = codigoService.revisar(codigoId);
+		return new ResponseEntity<String>(resultado, HttpStatus.OK);
+	}
 
 	@RequestMapping(value = "/codigos", method = RequestMethod.POST)
 	public ResponseEntity<?> createCodigo(@Valid @RequestBody Codigo codigo) {
-		codigo = codigoService.crear(codigo);
+		codigo = codigoService.actualizar(codigo);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newCodigoUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(codigo.getId())
 				.toUri();
