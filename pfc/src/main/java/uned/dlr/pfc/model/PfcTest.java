@@ -1,5 +1,6 @@
 package uned.dlr.pfc.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,6 +14,7 @@ public class PfcTest {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	Long id;
 	String nombre;
+	@Column(length=5000)
 	String code;
 	
 	

@@ -1,7 +1,7 @@
 var currentProyectos;
 var currentCodigo;
 var currentStatusMsg;
-var currentUser ={"id":1,"nombre":"user1"};
+var currentUser;
 var currentProyecto;
 
 function init(){
@@ -337,6 +337,7 @@ function saveCodigo(){
 	        	 currentStatusMsg="Grabado "+codigo.nombre;
 	        	 currentCodigo=codigo;
 	        	 actualizarCodigo();
+	        	 testCodigo();
 	         },
 
 	         error: function (jqXHR, status) {
@@ -346,4 +347,10 @@ function saveCodigo(){
 	         }
 	   });
 	
+}
+
+function testCodigo(){
+	if(currentCodigo){
+	  document.getElementById('testBrowser').src = 'jasmineRunner.jsp?codigoId='+currentCodigo.id;
+    }
 }

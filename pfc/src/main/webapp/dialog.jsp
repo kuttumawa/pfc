@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="css/jquery-ui.css">
+<link rel="stylesheet" href="css/jquery-ui.min.css">
 <script src="js/jquery-ui.min.js"></script>
   
   <style>
@@ -14,9 +14,9 @@
     .validateTips { border: 1px solid transparent; padding: 0.3em; }
   </style>
   <script>
+  var dialog,dialogLogin,dialogSignup;
   $(function() {
-    var dialog,dialogLogin,dialogSignup, form,
- 
+     var form,
       name = $( "#name" ),
       descripcion = $( "#descripcion" ),
       login_user = $( "#login_user" ),
@@ -170,14 +170,57 @@
         x=2;
     	dialog.dialog( "open" );
       });
-    $( "#create-login" ).button().on( "click", function() {
+    $('#loginId').on( "click", function() {
         x=3;
     	dialogLogin.dialog( "open" );
       });
-    $( "#create-signup" ).button().on( "click", function() {
+    $( "#signupId" ).on( "click", function() {
         x=4;
     	dialogSignup.dialog( "open" );
       });
+
+
+   
+        $( "#create-proyecto" ).button({
+          text: true,
+          icons: {
+            primary: "ui-icon-circle-plus"
+          }
+        });
+        $( "#create-codigo" ).button({
+          text: true,
+          icons: {
+            primary: "ui-icon-circle-plus"
+          }
+        });
+        $( "#saveButton" ).button({
+            text: true,
+            icons: {
+              primary: "ui-icon-disk"
+            }
+          });
+        $( "#executeButton" ).button({
+            text: true,
+            icons: {
+              primary: "ui-icon-play"
+            }
+          });
+        $( "#revisarButton" ).button({
+            text: true,
+            icons: {
+              primary: "ui-icon-play"
+            }
+          });
+        $( "#runTestButton" ).button({
+            text: true,
+            icons: {
+              primary: "ui-icon-play"
+            }
+          });
+        
+      
+
+    
   });
   </script>
 <div id="dialog-form" title="Nuevo">
@@ -185,7 +228,7 @@
   <form>
     <fieldset>
       <label for="name">Nombre</label>
-      <input type="text" name="name" id="name" value="Jane Smith" class="text ui-widget-content ui-corner-all">
+      <input type="text" name="name" id="name"  class="text ui-widget-content ui-corner-all">
       <label for="descripcion">Descripción</label>
       <textarea id="descripcion" name="descripcion"  class="text ui-widget-content ui-corner-all"></textarea>
       
@@ -201,7 +244,7 @@
     <fieldset>
       <div class="validateTips"></div>
       <label for="login_user">Usuario</label>
-      <input type="text" name="login_user" id="login_user" value="" class="text ui-widget-content ui-corner-all">
+      <input type="text" name="login_user" id="login_user"  class="text ui-widget-content ui-corner-all">
       <label for="login_password">Password</label>
       <input type="password" name="login_password" id="login_password" value="" class="text ui-widget-content ui-corner-all">
       
@@ -215,13 +258,13 @@
     <fieldset>
       <div class="validateTips"></div>
       <label for="signup_user">Usuario</label>
-      <input type="text" name="signup_user" id="signup_user" value="" class="text ui-widget-content ui-corner-all">
+      <input type="text" name="signup_user" id="signup_user"  class="text ui-widget-content ui-corner-all">
       <label for="name">Email</label>
-      <input type="text" name="email" id="email" value="" class="text ui-widget-content ui-corner-all">
+      <input type="text" name="email" id="email"  class="text ui-widget-content ui-corner-all">
       <label for="signup_password">Password</label>
-      <input type="password" name="signup_password" id="signup_password" value="" class="text ui-widget-content ui-corner-all">
+      <input type="password" name="signup_password" id="signup_password"  class="text ui-widget-content ui-corner-all">
       <label for="password">Confirmar Password</label>
-      <input type="password" name="signup_password_bis" id="signup_password_bis" value="" class="text ui-widget-content ui-corner-all">
+      <input type="password" name="signup_password_bis" id="signup_password_bis"  class="text ui-widget-content ui-corner-all">
       
       <!-- Allow form submission with keyboard without duplicating the dialog button -->
       <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">

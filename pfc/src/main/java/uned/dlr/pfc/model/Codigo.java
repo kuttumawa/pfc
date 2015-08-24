@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,6 +28,7 @@ public class Codigo {
 	Long id;
 	@NotEmpty
 	String nombre;
+	@Column(length=5000)
 	String code;
 	@OneToOne
 	PfcTest test;

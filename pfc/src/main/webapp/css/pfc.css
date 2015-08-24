@@ -16,7 +16,7 @@
 #section {
     width:500px;
     float:left;
-    padding:10px; 
+    padding:5px; 
 }
 #footer {
     background-color:black;
@@ -34,4 +34,15 @@
 	float:right;
     padding:2px;
     color:red;
+}
+#toolbar {
+    padding: 4px;
+    display: inline-block;
+}
+  /* support: IE7 */
+  *+html #toolbar {
+    display: inline;
+}
+h2{
+	font-size: 100%;
 }

@@ -5,7 +5,6 @@ import java.net.URI;
 import javax.inject.Inject;
 import javax.validation.Valid;
 
-import org.apache.tomcat.jni.Poll;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpHeaders;
@@ -26,43 +25,62 @@ import uned.dlr.pfc.service.CodigoServiceIF;
 public class CodigoController {
 
 	String CODIGO = "var numero = prompt(\"Introduce un número y se mostrará su factorial\");"
-					+"\nvar resultado = 1;"
-					+"\n" 
-					+"\nfor(var i=1; i<=numero; i++) {"
-					+"\n  resultado *= i;"
-					+"\n}"
-					+"\nalert(resultado);";
+			+ "\nvar resultado = 1;"
+			+ "\n"
+			+ "\nfor(var i=1; i<=numero; i++) {"
+			+ "\n  resultado *= i;"
+			+ "\n}" + "\nalert(resultado);";
 	@Inject
 	private CodigoServiceIF codigoService;
 
 	@RequestMapping(value = "/codigos/{codigoId}", method = RequestMethod.GET)
 	public ResponseEntity<Codigo> getCodigo(@PathVariable Long codigoId) {
-        existeCodigo(codigoId);
+		existeCodigo(codigoId);
 		Codigo codigo = codigoService.getCodigo(codigoId);
 		return new ResponseEntity<Codigo>(codigo, HttpStatus.OK);
 	}
+
+	@RequestMapping(value = "/codigos/{codigoId}/js", method = RequestMethod.GET)
+	public ResponseEntity<String> getCodigoJs(@PathVariable Long codigoId) {
+		Codigo codigo = codigoService.getCodigo(codigoId);
+		return new ResponseEntity<String>(codigo != null ? codigo.getCode()
+				: "", HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/codigos/{codigoId}/test/js", method = RequestMethod.GET)
+	public ResponseEntity<String> getTestCodigoJs(@PathVariable Long codigoId) {
+		Codigo codigo = codigoService.getCodigo(codigoId);
+		return new ResponseEntity<String>((codigo != null
+				&& codigo.getTest() != null) ? codigo.getTest().getCode() : "",
+				HttpStatus.OK);
+	}
+
 	@RequestMapping(value = "/codigos/{codigoId}/execute", method = RequestMethod.GET)
 	public ResponseEntity<Resultado> executeCodigo(@PathVariable Long codigoId) {
-        existeCodigo(codigoId);
-		Resultado resultado=new Resultado();
+		existeCodigo(codigoId);
+		Resultado resultado = new Resultado();
 		resultado.setResultado(codigoService.ejecutar(codigoId));
 		return new ResponseEntity<Resultado>(resultado, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/codigos/{codigoId}", method = RequestMethod.DELETE)
-	public ResponseEntity<Codigo> borrarCodigo(@PathVariable Long codigoId) throws Throwable {
+	public ResponseEntity<Codigo> borrarCodigo(@PathVariable Long codigoId)
+			throws Throwable {
 		existeCodigo(codigoId);
 		codigoService.borrar(codigoId);
 		return new ResponseEntity<Codigo>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/codigos/{codigoId}/ejecutar", method = RequestMethod.GET)
-	public ResponseEntity<String> ejecutarCodigo(@PathVariable Long codigoId) throws Throwable {
+	public ResponseEntity<String> ejecutarCodigo(@PathVariable Long codigoId)
+			throws Throwable {
 		String resultado = codigoService.ejecutar(codigoId);
 		return new ResponseEntity<String>(resultado, HttpStatus.OK);
 	}
+
 	@RequestMapping(value = "/codigos/{codigoId}/revisar", method = RequestMethod.GET)
-	public ResponseEntity<String> lintCodigo(@PathVariable Long codigoId) throws Throwable {
+	public ResponseEntity<String> lintCodigo(@PathVariable Long codigoId)
+			throws Throwable {
 		String resultado = codigoService.revisar(codigoId);
 		return new ResponseEntity<String>(resultado, HttpStatus.OK);
 	}
@@ -71,16 +89,18 @@ public class CodigoController {
 	public ResponseEntity<?> createCodigo(@Valid @RequestBody Codigo codigo) {
 		codigo = codigoService.actualizar(codigo);
 		HttpHeaders responseHeaders = new HttpHeaders();
-		URI newCodigoUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(codigo.getId())
-				.toUri();
+		URI newCodigoUri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(codigo.getId()).toUri();
 		responseHeaders.setLocation(newCodigoUri);
 		return new ResponseEntity<>(codigo, responseHeaders, HttpStatus.CREATED);
 	}
 
-	protected Codigo existeCodigo(Long codigoId) throws RecursoNoEncontradoException {
+	protected Codigo existeCodigo(Long codigoId)
+			throws RecursoNoEncontradoException {
 		Codigo codigo = codigoService.getCodigo(codigoId);
 		if (codigo == null) {
-			throw new RecursoNoEncontradoException("No existe el codigo con id " + codigoId);
+			throw new RecursoNoEncontradoException(
+					"No existe el codigo con id " + codigoId);
 		}
 		return codigo;
 	}

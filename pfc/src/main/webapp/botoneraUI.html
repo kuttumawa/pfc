@@ -1,0 +1,62 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>jQuery UI Button - Toolbar</title>
+  
+  <script src="js/jquery.min.js"></script>
+ <link rel="stylesheet" href="css/jquery-ui.css">
+<script src="js/jquery-ui.min.js"></script>
+  <link rel="stylesheet" href="/resources/demos/style.css">
+  <style>
+  #toolbar {
+    padding: 4px;
+    display: inline-block;
+  }
+  /* support: IE7 */
+  *+html #toolbar {
+    display: inline;
+  }
+  </style>
+  <script>
+  $(function() {
+    $( "#beginning" ).button({
+      text: false,
+      icons: {
+        primary: "ui-icon-seek-start"
+      }
+    });
+    $( "#rewind" ).button({
+      text: false,
+      icons: {
+        primary: "ui-icon-seek-prev"
+      }
+    });
+    $( "#shuffle" ).button();
+    $( "#repeat" ).buttonset();
+  });
+  </script>
+</head>
+<body>
+ 
+<div id="toolbar" class="ui-widget-header ui-corner-all">
+  <button id="beginning">go to beginning</button>
+  <button id="rewind">rewind</button>
+  <button id="play">play</button>
+  <button id="stop">stop</button>
+  <button id="forward">fast forward</button>
+  <button id="end">go to end</button>
+ 
+  <input type="checkbox" id="shuffle"><label for="shuffle">Shuffle</label>
+ 
+  <span id="repeat">
+    <input type="radio" id="repeat0" name="repeat" checked="checked"><label for="repeat0">No Repeat</label>
+    <input type="radio" id="repeat1" name="repeat"><label for="repeat1">Once</label>
+    <input type="radio" id="repeatall" name="repeat"><label for="repeatall">All</label>
+  </span>
+</div>
+ 
+ 
+</body>
+</html>
