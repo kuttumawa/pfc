@@ -70,6 +70,7 @@ function getCodigo(id){
 	         type: "GET",
 	         url: "v1/codigos/"+id,
 	         contentType: "application/json; charset=utf-8",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },
 	         dataType: "json",
 	         success: function (codigo, status, jqXHR) {
 	        	 currentStatusMsg=null;

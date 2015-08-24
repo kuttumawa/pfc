@@ -1,10 +1,12 @@
 package uned.dlr.pfc.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +37,14 @@ public class CodigoController {
 	private CodigoServiceIF codigoService;
 
 	@RequestMapping(value = "/codigos/{codigoId}", method = RequestMethod.GET)
-	public ResponseEntity<Codigo> getCodigo(@PathVariable Long codigoId) {
+	public ResponseEntity<Codigo> getCodigo(@RequestHeader("Authorization") String authorization,@PathVariable Long codigoId) {
+		byte[] decoded = Base64.decodeBase64(authorization.replace("Basic ", ""));
+		try {
+			System.out.println(new String(decoded, "UTF-8") + "\n");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		existeCodigo(codigoId);
 		Codigo codigo = codigoService.getCodigo(codigoId);
 		return new ResponseEntity<Codigo>(codigo, HttpStatus.OK);
