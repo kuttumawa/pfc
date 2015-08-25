@@ -81,7 +81,7 @@ public class CodigoServiceImp implements CodigoServiceIF {
 	@Override
 	public void borrar(Long codigoId) throws Exception {
 		Codigo codigo=codigoDao.getCodigo(codigoId);
-		if(codigo.getPropietarios().size()==0)codigoDao.deleteById(codigoId);
+		if(codigo.getPropietarios().size()==1)codigoDao.deleteById(codigoId);
 	}
 	@Override
 	public Codigo getCodigo(Long id) {

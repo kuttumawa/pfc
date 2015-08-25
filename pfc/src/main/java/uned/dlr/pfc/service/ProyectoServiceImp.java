@@ -48,11 +48,7 @@ public class ProyectoServiceImp implements ProyectoServiceIF{
 
 	@Override
 	public void borrarProyecto(Long proyectoId) throws Exception {
-		Proyecto p=proyectoDao.getProyecto(proyectoId);
-		for(Codigo c :p.getCodigos()){
-			borrarCodigoProyecto(proyectoId,c.getId());
-		}
-		proyectoDao.deleteById(proyectoId);
+		borrarCodigoProyectoyProyecto(proyectoId);
 	}
 
 	@Override
@@ -74,6 +70,22 @@ public class ProyectoServiceImp implements ProyectoServiceIF{
 		}
 
 		
+	}
+	public void borrarCodigoProyectoyProyecto(Long proyectoId) throws Exception {
+		Proyecto p=proyectoDao.getProyecto(proyectoId);
+		Iterator<Codigo> it=p.getCodigos().iterator();
+		while(it.hasNext()){
+			Codigo c=it.next();
+			it.remove();
+			Codigo codigo=codigoDao.getCodigo(c.getId());
+			codigo.getPropietarios().remove(proyectoId);
+			if(codigo.getPropietarios().size()==0) codigoDao.deleteById(codigo.getId());
+			else{
+				codigoDao.save(codigo);
+			}
+		}
+		proyectoDao.save(p);
+		proyectoDao.deleteById(p.getId());
 	}
 
 	@Override

@@ -21,7 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import uned.dlr.pfc.model.Codigo;
+import uned.dlr.pfc.model.User;
 import uned.dlr.pfc.service.CodigoServiceIF;
+import uned.dlr.pfc.service.UserServiceIF;
 
 @SpringBootApplication
 @RestController
@@ -35,19 +37,41 @@ public class CodigoController {
 			+ "\n}" + "\nalert(resultado);";
 	@Inject
 	private CodigoServiceIF codigoService;
+	@Inject
+	private UserServiceIF userService;
 
 	@RequestMapping(value = "/codigos/{codigoId}", method = RequestMethod.GET)
 	public ResponseEntity<Codigo> getCodigo(@RequestHeader("Authorization") String authorization,@PathVariable Long codigoId) {
-		byte[] decoded = Base64.decodeBase64(authorization.replace("Basic ", ""));
-		try {
-			System.out.println(new String(decoded, "UTF-8") + "\n");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		existeCodigo(codigoId);
-		Codigo codigo = codigoService.getCodigo(codigoId);
+		User user=checkAutenticacion(authorization);
+		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
 		return new ResponseEntity<Codigo>(codigo, HttpStatus.OK);
+	}
+	protected Codigo existeCodigoYEstaAutorizado(Long codigoId,User user)
+			throws RecursoNoEncontradoException {
+		Codigo codigo = codigoService.getCodigo(codigoId);
+		if (codigo == null) {
+			throw new RecursoNoEncontradoException(
+					"No existe el recurso con id " + codigoId);
+		}
+		if(!codigo.getPropietarios().contains(user.getId())) 
+			throw new AutorizacionNoValidaException("El usuario no tiene autorización para acceder al recurso");
+             		
+		return codigo;
+	}
+
+	private User checkAutenticacion(String authorization) {
+		if(authorization==null || authorization.length()<1) throw new BadAutenticacionException("Error de autenticacion");
+		byte[] decoded = Base64.decodeBase64(authorization.replace("Basic ", ""));
+		User user=null;
+		try {
+			String[] userPass=new String(decoded, "UTF-8").split(":");
+			user=userService.find(userPass[0], userPass[1]);
+			if(user==null) throw new BadAutenticacionException("Error de autenticacion");
+
+		}catch (Exception e){
+			throw new BadAutenticacionException("Error de autenticacion");
+		}
+		return user;
 	}
 
 	@RequestMapping(value = "/codigos/{codigoId}/js", method = RequestMethod.GET)
@@ -66,38 +90,44 @@ public class CodigoController {
 	}
 
 	@RequestMapping(value = "/codigos/{codigoId}/execute", method = RequestMethod.GET)
-	public ResponseEntity<Resultado> executeCodigo(@PathVariable Long codigoId) {
-		existeCodigo(codigoId);
+	public ResponseEntity<Resultado> executeCodigo(@RequestHeader("Authorization") String authorization,@PathVariable Long codigoId) {
+		User user=checkAutenticacion(authorization);
+		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
 		Resultado resultado = new Resultado();
 		resultado.setResultado(codigoService.ejecutar(codigoId));
 		return new ResponseEntity<Resultado>(resultado, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/codigos/{codigoId}", method = RequestMethod.DELETE)
-	public ResponseEntity<Codigo> borrarCodigo(@PathVariable Long codigoId)
+	public ResponseEntity<Codigo> borrarCodigo(@RequestHeader("Authorization") String authorization,@PathVariable Long codigoId)
 			throws Throwable {
-		existeCodigo(codigoId);
+		User user=checkAutenticacion(authorization);
+		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
 		codigoService.borrar(codigoId);
 		return new ResponseEntity<Codigo>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/codigos/{codigoId}/ejecutar", method = RequestMethod.GET)
-	public ResponseEntity<String> ejecutarCodigo(@PathVariable Long codigoId)
+	public ResponseEntity<String> ejecutarCodigo(@RequestHeader("Authorization") String authorization,@PathVariable Long codigoId)
 			throws Throwable {
+		User user=checkAutenticacion(authorization);
+		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
 		String resultado = codigoService.ejecutar(codigoId);
 		return new ResponseEntity<String>(resultado, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/codigos/{codigoId}/revisar", method = RequestMethod.GET)
-	public ResponseEntity<String> lintCodigo(@PathVariable Long codigoId)
+	public ResponseEntity<String> lintCodigo(@RequestHeader("Authorization") String authorization,@PathVariable Long codigoId)
 			throws Throwable {
+		User user=checkAutenticacion(authorization);
+		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
 		String resultado = codigoService.revisar(codigoId);
 		return new ResponseEntity<String>(resultado, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/codigos", method = RequestMethod.POST)
-	public ResponseEntity<?> createCodigo(@Valid @RequestBody Codigo codigo) {
-		codigo = codigoService.actualizar(codigo);
+	public ResponseEntity<?> createCodigo(@RequestHeader("Authorization") String authorization,@Valid @RequestBody Codigo codigo) {
+		User user=checkAutenticacion(authorization);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newCodigoUri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(codigo.getId()).toUri();
@@ -105,15 +135,7 @@ public class CodigoController {
 		return new ResponseEntity<>(codigo, responseHeaders, HttpStatus.CREATED);
 	}
 
-	protected Codigo existeCodigo(Long codigoId)
-			throws RecursoNoEncontradoException {
-		Codigo codigo = codigoService.getCodigo(codigoId);
-		if (codigo == null) {
-			throw new RecursoNoEncontradoException(
-					"No existe el codigo con id " + codigoId);
-		}
-		return codigo;
-	}
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(CodigoController.class, args);

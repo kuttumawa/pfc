@@ -27,6 +27,8 @@ $(function(){init();});
 <div id="toolbar" class="ui-widget-header ui-corner-all">
 <button style="font-size: .7em;" id="create-proyecto">Proyecto</button>
 <button style="font-size: .7em;" id="create-codigo">Código</button>
+<button style="font-size: .7em;" id="delete-proyecto" onClick="borrarProyecto();">Proyecto</button>
+<button style="font-size: .7em;" id="delete-codigo" onClick="borrarCodigo();">Código</button>
 <button style="font-size: .7em;" id="saveButton" onClick="saveCodigo();">Grabar</button>
 <button style="font-size: .7em;" id="executeButton" onClick="executeCodigo();">Ejecutar</button>
 <button style="font-size: .7em;"  id="revisarButton" onClick="revisarCodigo();">Revisar</button>

@@ -178,6 +178,7 @@
         x=4;
     	dialogSignup.dialog( "open" );
       });
+   
 
 
    
@@ -193,6 +194,18 @@
             primary: "ui-icon-circle-plus"
           }
         });
+        $( "#delete-proyecto" ).button({
+            text: true,
+            icons: {
+              primary: "ui-icon-circle-minus"
+            }
+          });
+          $( "#delete-codigo" ).button({
+            text: true,
+            icons: {
+              primary: "ui-icon-circle-minus"
+            }
+          });
         $( "#saveButton" ).button({
             text: true,
             icons: {

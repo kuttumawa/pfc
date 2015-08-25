@@ -26,6 +26,39 @@ public class RestExceptionHandler {
 		errorDetail.setDeveloperMessage(rnfe.getClass().getName());
 		return new ResponseEntity<>(errorDetail, null, HttpStatus.NOT_FOUND);
 	}
+	@ExceptionHandler(AutorizacionNoValidaException.class)
+	public ResponseEntity<?> handleAutorizacionNoValidaException(RecursoNoEncontradoException rnfe,
+			HttpServletRequest request) {
+		ErrorDetail errorDetail = new ErrorDetail();
+		errorDetail.setTimeStamp(new Date().getTime());
+		errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
+		errorDetail.setTitle("Sin Permisos para el recurso");
+		errorDetail.setDetail(rnfe.getMessage());
+		errorDetail.setDeveloperMessage(rnfe.getClass().getName());
+		return new ResponseEntity<>(errorDetail, null, HttpStatus.FORBIDDEN);
+	}
+	@ExceptionHandler(BadAutenticacionException.class)
+	public ResponseEntity<?> handleBadAutenticacionException(RecursoNoEncontradoException rnfe,
+			HttpServletRequest request) {
+		ErrorDetail errorDetail = new ErrorDetail();
+		errorDetail.setTimeStamp(new Date().getTime());
+		errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
+		errorDetail.setTitle("No autenticado");
+		errorDetail.setDetail(rnfe.getMessage());
+		errorDetail.setDeveloperMessage(rnfe.getClass().getName());
+		return new ResponseEntity<>(errorDetail, null, HttpStatus.FORBIDDEN);
+	}
+	@ExceptionHandler(BadOperationException.class)
+	public ResponseEntity<?> handleBadOperationException(RecursoNoEncontradoException rnfe,
+			HttpServletRequest request) {
+		ErrorDetail errorDetail = new ErrorDetail();
+		errorDetail.setTimeStamp(new Date().getTime());
+		errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
+		errorDetail.setTitle("Operación no permitida");
+		errorDetail.setDetail(rnfe.getMessage());
+		errorDetail.setDeveloperMessage(rnfe.getClass().getName());
+		return new ResponseEntity<>(errorDetail, null, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
 @ExceptionHandler(MethodArgumentNotValidException.class)
 public ResponseEntity<?> handleValidationError(MethodArgumentNotValidException manve, HttpServletRequest request) {

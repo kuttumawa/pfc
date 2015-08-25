@@ -86,12 +86,34 @@ function getCodigo(id){
 	   });
 	
 }
+function borrarCodigo(){
+	   jQuery.ajax({
+	         type: "DELETE",
+	         url: "v1/proyectos/"+currentProyecto.id+"/codigos/"+currentCodigo.id,
+	         contentType: "application/json; charset=utf-8",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },
+	         dataType: "json",
+	         success: function (codigo, status, jqXHR) {
+	        	 currentStatusMsg="Borrado  "+ codigo.nombre;
+	        	 currentCodigo=null;
+	        	 actualizarCodigo();
+	         },
+
+	         error: function (jqXHR, status) {
+	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
+	        	 console.log(currentStatusMsg);
+	        	 actualizar();
+	         }
+	   });
+	
+}
 function executeCodigo(){
 	
 	   jQuery.ajax({
 	         type: "GET",
-	         url: "v1/codigos/"+currentCodigo.id+"/execute",
+	         url: "v1/codigos/"+currentCodigo.id+"/ejecutar",
 	         contentType: "application/json; charset=utf-8",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },
 	         dataType: "json",
 	         success: function (resultado, status, jqXHR) {
 	        	 $('#resultadoId').val(resultado.resultado);
@@ -110,7 +132,8 @@ function revisarCodigo(){
 	         type: "GET",
 	         url: "v1/codigos/"+currentCodigo.id+"/revisar",
 	         contentType: "application/json; charset=utf-8",
-	         dataType: "json",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },
+             dataType: "json",
 	         success: function (resultado, status, jqXHR) {
 	        	 $('#resultadoId').val(resultado.resultado);
 	         },
@@ -129,6 +152,7 @@ function createCodigo(nombre,descripcion){
 	         type: "POST",
 	         url: "v1/proyectos/"+currentProyecto.id+"/codigos",
 	         contentType: "application/json; charset=utf-8",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },		        
 	         data: JSON.stringify({"nombre":nombre,"descripcion":descripcion}),
 	         dataType: "json",
 	         success: function (codigo, status, jqXHR) {
@@ -146,25 +170,7 @@ function createCodigo(nombre,descripcion){
 	
 }
 
-function borrarCodigo(id){
-	
-	   jQuery.ajax({
-	         type: "DELETE",
-	         url: "v1/codigos/"+id,
-	         contentType: "application/json; charset=utf-8",
-	         dataType: "json",
-	         success: function (codigo, status, jqXHR) {
-	        	 currentCodigo="Borrado OK";
-	        	 actualizarCodigo();
-	         },
-	         error: function (jqXHR, status) {
-	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
-	             console.log(currentStatusMsg);
-	             actualizar();
-	         }
-	   });
-	
-}
+
 
 function createProyecto(nombre,descripcion){
 	var nuevo={id:"",nombre:nombre,descripcion:descripcion,user:currentUser};
@@ -172,6 +178,7 @@ function createProyecto(nombre,descripcion){
 	         type: "POST",
 	         url: "v1/proyectos",
 	         contentType: "application/json; charset=utf-8",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },		        
 	         data: JSON.stringify(nuevo),
 	         dataType: "json",
 	         success: function (proyecto, status, jqXHR) {
@@ -198,8 +205,9 @@ function getProyectos(){
 	
 	   jQuery.ajax({
 	         type: "GET",
-	         url: "v1/proyectos?userId="+currentUser.id,
+	         url: "v1/proyectos",
 	         contentType: "application/json; charset=utf-8",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },     
 	         dataType: "json",
 	         success: function (proyectos, status, jqXHR) {
 	        	 currentStatusMsg=null;
@@ -211,6 +219,28 @@ function getProyectos(){
 	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
 	        	 console.log(currentStatusMsg);
 	        	 
+	         }
+	   });
+	
+}
+function borrarProyecto(){
+	    jQuery.ajax({
+	         type: "DELETE",
+	         url: "v1/proyectos/"+currentProyecto.id,
+	         contentType: "application/json; charset=utf-8",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },
+	         dataType: "json",
+	         success: function (codigo, status, jqXHR) {
+	        	 currentStatusMsg="Borrado  "+ codigo.nombre;
+	        	 currentCodigo=null;
+	        	 currentCodigo=null;
+	        	 actualizarCodigo();
+	         },
+
+	         error: function (jqXHR, status) {
+	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
+	        	 console.log(currentStatusMsg);
+	        	 actualizar();
 	         }
 	   });
 	
@@ -249,6 +279,7 @@ function getProyecto(id){
 	         type: "GET",
 	         url: "v1/proyectos/"+id,
 	         contentType: "application/json; charset=utf-8",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },		        
 	         dataType: "json",
 	         success: function (proyecto, status, jqXHR) {
 	        	 currentStatusMsg=null;
@@ -332,6 +363,7 @@ function saveCodigo(){
 	         type: "POST",
 	         url: "v1/codigos",
 	         contentType: "application/json; charset=utf-8",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },		        
 	         data: JSON.stringify(currentCodigo),
 	         dataType: "json",
 	         success: function (codigo, status, jqXHR) {

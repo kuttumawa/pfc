@@ -36,11 +36,11 @@ public class User {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	@JsonIgnore
+	//@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
-	@JsonProperty("password")
+	//@JsonProperty("password")
 	public void setPassword(String password) {
 		this.password = password;
 	}
