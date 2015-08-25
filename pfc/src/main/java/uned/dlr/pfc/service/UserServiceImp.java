@@ -43,4 +43,15 @@ public class UserServiceImp implements UserServiceIF {
 		return null;
 	}
 
+	@Override
+	public List<User> getAll(String filter) {
+		return userDao.findPorNombre(filter);
+	}
+	@Override
+	public User findPorNombre(String filter) {
+		List<User> users= userDao.findPorNombre(filter);
+		if (!users.isEmpty()) return users.get(0);
+		return null;
+	}
+
 }

@@ -14,7 +14,7 @@
     .validateTips { border: 1px solid transparent; padding: 0.3em; }
   </style>
   <script>
-  var dialog,dialogLogin,dialogSignup;
+  var dialog,dialogLogin,dialogSignup,shareCodigo;
   $(function() {
      var form,
       name = $( "#name" ),
@@ -24,8 +24,9 @@
       signup_user = $( "#signup_user" ),
       signup_password = $( "#signup_password" ),
       signup_password_bis = $( "#signup_password_bis" ),
+      share_user=$( "#share_user" ),
       allFields = $( [] ).add( name ).add( descripcion ).add( login_user ).
-                   add( login_password ).add( signup_user ).add( signup_password ).add( signup_password_bis ),
+                   add( login_password ).add( signup_user ).add( signup_password ).add( signup_password_bis ).add( share_user ),
       tips = $( ".validateTips" );
     var x=1;
     function updateTips( t ) {
@@ -87,7 +88,9 @@
   	  }else if (x==4){//sign up
   		valid = valid && checkLength( signup_user, "user", 3, 16 )&& checkLength( signup_password, "password", 3, 16 );
   	    valid = valid && checkEquals(signup_password,signup_password_bis,"Passwords diferentes");
-  	  }
+  	  }else if (x==5){//share
+    		valid = valid && checkLength( share_user, "user", 3, 16 );
+      	  }
      
      
       if ( valid ) {
@@ -101,7 +104,11 @@
     	}else if (x==4){//sign up
     		createUsuario(signup_user.val(),signup_password.val());
     		dialogSignup.dialog( "close" );
-    	}
+    	
+        }else if (x==5){//sign up
+  		    compartirCodigo(share_user.val());
+  		    dialogShare.dialog( "close" );
+  	    }
            
         dialog.dialog( "close" );
       }
@@ -156,6 +163,22 @@
           allFields.removeClass( "ui-state-error" );
         }
       });
+     dialogShare = $( "#dialog-form-share" ).dialog({
+         autoOpen: false,
+         height: 400,
+         width: 450,
+         modal: true,
+         buttons: {
+           "Crear": doit,
+           Cancel: function() {
+         	  dialogShare.dialog( "close" );
+           }
+         },
+         close: function() {
+           $('form')[3].reset();
+           allFields.removeClass( "ui-state-error" );
+         }
+       });
  
     form = dialog.find( "form" ).on( "submit", function( event ) {
       event.preventDefault();
@@ -177,6 +200,10 @@
     $( "#signupId" ).on( "click", function() {
         x=4;
     	dialogSignup.dialog( "open" );
+      });
+    $( "#shareButton" ).on( "click", function() {
+        x=5;
+        dialogShare.dialog( "open" );
       });
    
 
@@ -230,11 +257,32 @@
               primary: "ui-icon-play"
             }
           });
+        $( "#shareButton" ).button({
+            text: true,
+            icons: {
+              primary: "ui-icon-person"
+            }
+          });
         
       
 
     
   });
+  
+  
+  $(function() {
+    
+    $( "#share_user" ).autocomplete({
+      source: "v1/users",
+      minLength: 2,
+      select: function( event, ui ) {
+        console.log( ui.item ?
+          "Selected: " + ui.item.nombre + " aka " + ui.item.id :
+          "Nothing selected, input was " + this.value );
+      }
+    });
+  });
+ 
   </script>
 <div id="dialog-form" title="Nuevo">
  
@@ -284,4 +332,16 @@
     </fieldset>
   </form>
  
+</div>
+<div id="dialog-form-share" title="Compartir">
+ <form>
+    <fieldset>
+      <div class="validateTips"></div>
+      <label for="share_user">Usuario</label>
+      <input type="text" name="share_user" id="share_user"  class="text ui-widget-content ui-corner-all">
+      
+      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
 </div>

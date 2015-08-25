@@ -27,7 +27,7 @@ public class RestExceptionHandler {
 		return new ResponseEntity<>(errorDetail, null, HttpStatus.NOT_FOUND);
 	}
 	@ExceptionHandler(AutorizacionNoValidaException.class)
-	public ResponseEntity<?> handleAutorizacionNoValidaException(RecursoNoEncontradoException rnfe,
+	public ResponseEntity<?> handleAutorizacionNoValidaException(AutorizacionNoValidaException rnfe,
 			HttpServletRequest request) {
 		ErrorDetail errorDetail = new ErrorDetail();
 		errorDetail.setTimeStamp(new Date().getTime());
@@ -38,7 +38,7 @@ public class RestExceptionHandler {
 		return new ResponseEntity<>(errorDetail, null, HttpStatus.FORBIDDEN);
 	}
 	@ExceptionHandler(BadAutenticacionException.class)
-	public ResponseEntity<?> handleBadAutenticacionException(RecursoNoEncontradoException rnfe,
+	public ResponseEntity<?> handleBadAutenticacionException(BadAutenticacionException rnfe,
 			HttpServletRequest request) {
 		ErrorDetail errorDetail = new ErrorDetail();
 		errorDetail.setTimeStamp(new Date().getTime());
@@ -49,7 +49,7 @@ public class RestExceptionHandler {
 		return new ResponseEntity<>(errorDetail, null, HttpStatus.FORBIDDEN);
 	}
 	@ExceptionHandler(BadOperationException.class)
-	public ResponseEntity<?> handleBadOperationException(RecursoNoEncontradoException rnfe,
+	public ResponseEntity<?> handleBadOperationException(BadOperationException rnfe,
 			HttpServletRequest request) {
 		ErrorDetail errorDetail = new ErrorDetail();
 		errorDetail.setTimeStamp(new Date().getTime());

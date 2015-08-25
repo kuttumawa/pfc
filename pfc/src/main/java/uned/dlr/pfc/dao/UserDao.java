@@ -42,6 +42,12 @@ public class UserDao {
 		return em.createQuery("SELECT p FROM User p where p.nombre=:usuario and p.password=:pass order by p.nombre ", User.class)
 				.setParameter("usuario", usuario).setParameter("pass", pass).getResultList();
 	}
+
+	public List<User> findPorNombre(String filter) {
+		return em.createQuery("SELECT p FROM User p where p.nombre like :filter order by p.nombre ", User.class)
+				.setParameter("filter", (filter!=null?filter:"")).getResultList();
+	
+	}
 	
 	
 }

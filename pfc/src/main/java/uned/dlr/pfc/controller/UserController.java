@@ -1,10 +1,12 @@
 package uned.dlr.pfc.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpHeaders;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,10 +39,18 @@ public class UserController {
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/users", method = RequestMethod.GET)
-	public ResponseEntity<User> getUserConPassword(@RequestParam("user") String user,@RequestParam("pass") String pass) {
-		User u = existeUserConPassword(user,pass);
+	@RequestMapping(value = "/users/login", method = RequestMethod.POST)
+	public ResponseEntity<User> getUserConPassword(@RequestHeader("Authorization") String authorization) {
+		User u = checkAutenticacion(authorization);
 		return new ResponseEntity<User>(u, HttpStatus.OK);
+	}
+	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	public ResponseEntity<List<User>> getUsers(@RequestParam(required=false) String term,@RequestParam(required=false) String nombre) {
+		String filtro="";
+		if(nombre!=null) filtro=nombre;
+		else filtro=(term!=null?term:"");
+		List<User> users = userService.getAll(filtro);
+		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/users/{userId}", method = RequestMethod.DELETE)
@@ -76,6 +87,20 @@ public class UserController {
 
 	public static void main(String[] args) {
 		SpringApplication.run(UserController.class, args);
+	}
+	private User checkAutenticacion(String authorization) {
+		if(authorization==null || authorization.length()<1) throw new BadAutenticacionException("Error de autenticacion");
+		byte[] decoded = Base64.decodeBase64(authorization.replace("Basic ", ""));
+		User user=null;
+		try {
+			String[] userPass=new String(decoded, "UTF-8").split(":");
+			user=userService.find(userPass[0], userPass[1]);
+			if(user==null) throw new BadAutenticacionException("Error de autenticacion");
+
+		}catch (Exception e){
+			throw new BadAutenticacionException("Error de autenticacion");
+		}
+		return user;
 	}
 
 }

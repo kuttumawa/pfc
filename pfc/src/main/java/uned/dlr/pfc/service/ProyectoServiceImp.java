@@ -20,7 +20,7 @@ public class ProyectoServiceImp implements ProyectoServiceIF{
 	@Override
 	public Proyecto addCodigo(Long proyectoId,Codigo codigo) {
 		Proyecto p=proyectoDao.getProyecto(proyectoId);
-		codigo.addPropietario(p.getId());
+		codigo.addPropietario(p.getUser().getId());
 		p.addCode(codigo);
 		codigoDao.save(codigo);
 		proyectoDao.save(p);

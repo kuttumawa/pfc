@@ -3,6 +3,7 @@ package uned.dlr.pfc.service;
 import uned.dlr.pfc.dao.CodigoDao;
 import uned.dlr.pfc.dao.ProyectoDao;
 import uned.dlr.pfc.model.Codigo;
+import uned.dlr.pfc.model.PfcTest;
 import uned.dlr.pfc.model.Proyecto;
 import uned.dlr.pfc.model.User;
 import uned.dlr.pfc.util.ExecutorIF;
@@ -27,9 +28,10 @@ public class CodigoServiceImp implements CodigoServiceIF {
 		return codigo;
 	}
 	public Codigo actualizar(Codigo codigo){
-		if(codigo.getTest()!=null && codigo.getTest().getId()==null){
-			codigoDao.saveTest(codigo.getTest());
+		if(codigo.getTest()!=null){
+			codigo.setTest(new PfcTest(codigo.getNombre()+"Test"));
 		}
+		codigoDao.saveTest(codigo.getTest());
 		codigoDao.save(codigo);
 		return codigo;
 	}
@@ -73,7 +75,7 @@ public class CodigoServiceImp implements CodigoServiceIF {
 		p.setUser(user2);
 		p.addCode(code);
 		proyectoDao.save(p);
-		code.addPropietario(p.getId());
+		code.addPropietario(user2.getId());
 		codigoDao.save(code);
 		return p;
 	}

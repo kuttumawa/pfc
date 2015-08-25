@@ -1,6 +1,7 @@
 package uned.dlr.pfc.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -88,9 +89,32 @@ public class ProyectoController {
 	@RequestMapping(value = "/proyectos/{proyectoId}/codigos/{codigoId}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> borrarCodigoEnProyecto(@RequestHeader("Authorization") String authorization,@PathVariable Long proyectoId,@PathVariable Long codigoId) throws Exception {
 		User user=checkAutenticacion(authorization);
-		Proyecto proyecto=existeProyectoYEstaAutorizado(proyectoId,user);
+		existeProyectoYEstaAutorizado(proyectoId,user);
 		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
 		proyectoService.borrarCodigoProyecto(proyectoId, codigoId);
+		return new ResponseEntity<>(codigo,HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/proyectos/{proyectoId}/codigos/{codigoId}/users", method = RequestMethod.GET)
+	public ResponseEntity<?> usuariosQueCompartenCodigo(@RequestHeader("Authorization") String authorization,@PathVariable Long proyectoId,@PathVariable Long codigoId) throws Exception {
+		User user=checkAutenticacion(authorization);
+		existeProyectoYEstaAutorizado(proyectoId,user);
+		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
+        List<User> users=new ArrayList<User>();
+        for(Long id:codigo.getPropietarios()){
+        	 users.add(userService.get(id));
+        }
+		return new ResponseEntity<>(users,HttpStatus.OK);
+	}
+	@RequestMapping(value = "/proyectos/{proyectoId}/codigos/{codigoId}/users", method = RequestMethod.POST)
+	public ResponseEntity<?> compartirCodigoConUsuario(@RequestHeader("Authorization") String authorization,@PathVariable Long proyectoId,@PathVariable Long codigoId,@RequestBody String nombreUsuario) throws Exception {
+		User user=checkAutenticacion(authorization);
+		existeProyectoYEstaAutorizado(proyectoId,user);
+		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
+		User user2=userService.findPorNombre(nombreUsuario);
+		if(user2==null) throw new BadOperationException("Usuario a compartir no existe");
+        codigoService.compartir(codigo, user, user2, "Compartido por " + user.getNombre());
+        codigo = codigoService.getCodigo(codigoId);
 		return new ResponseEntity<>(codigo,HttpStatus.OK);
 	}
 

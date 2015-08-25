@@ -33,6 +33,7 @@ $(function(){init();});
 <button style="font-size: .7em;" id="executeButton" onClick="executeCodigo();">Ejecutar</button>
 <button style="font-size: .7em;"  id="revisarButton" onClick="revisarCodigo();">Revisar</button>
 <button style="font-size: .7em;"  id="runTestButton" onClick="testCodigo();">Test</button>
+<button style="font-size: .7em;"  id="shareButton">Compartir</button>
 </div>
 
 <div id="section">
