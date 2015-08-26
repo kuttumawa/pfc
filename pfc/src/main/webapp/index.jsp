@@ -6,6 +6,7 @@
 <script src="js/tree.jquery.js"></script>
 <link rel="stylesheet" type="text/css" href="css/pfc.css">
 <link rel="stylesheet" type="text/css" href="css/jqtree.css">
+<jsp:include page="codemirror.jsp" />
 <jsp:include page="dialog.jsp" />
 <script>
 $(function(){init();});
@@ -40,7 +41,7 @@ $(function(){init();});
 <h2>Código: <span id="codigoNombreId"></span></h2>
 <p>
 <textarea id="codigoAreaId" rows="20" cols="65"></textarea>
-<textarea id="resultadoId" rows="5" cols="65"></textarea>
+<textarea id="resultadoId" rows="5" cols="65" ></textarea>
 </p>
 </div>
 
@@ -76,6 +77,6 @@ Copyright © David LR
 </body>
 </html>
 
-<jsp:include page="dialog.jsp"></jsp:include>
+
 
 

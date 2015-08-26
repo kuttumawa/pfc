@@ -3,11 +3,14 @@ var currentCodigo;
 var currentStatusMsg;
 var currentUser;
 var currentProyecto;
+var editorCode;
+var editorTest;
 
 function init(){
-	
+	 $('#resultadoId').hide();
 	 $('#tree1').tree({
-	        data: []
+	        data: [],
+	        autoOpen:0
 	    });
 	 $('#tree1').bind(
 			    'tree.click',
@@ -17,32 +20,61 @@ function init(){
 			        node.call(node);
 			    }
 			);
+	 CodeMirror.commands.autocomplete = function(cm) {
+	        cm.showHint({hint: CodeMirror.hint.anyword,hint:CodeMirror.hint.javascript});
+	      };
+	 editorCode = CodeMirror.fromTextArea(document.getElementById("codigoAreaId"), {
+		    lineNumbers: true,
+		    mode: "javascript",
+		    gutters: ["CodeMirror-lint-markers"],
+		    lint: true,
+		    extraKeys: {"Ctrl-Space": "autocomplete"}
+		  });
+	 editorTest = CodeMirror.fromTextArea(document.getElementById("testAreaId"), {
+		    lineNumbers: true,
+		    mode: "javascript",
+		    gutters: ["CodeMirror-lint-markers"],
+		    lint: true,
+		    extraKeys: {"Ctrl-Space": "autocomplete"}
+		  });
+}
+function treeSelectCodigoActivo(){
+	if(!currentCodigo) return;
+	var node = $('#tree1').tree('getNodeById', 'c'+currentCodigo.id);
+	$('#tree1').tree('selectNode', node);	
 }
 function actualizarCodigo(){
 	actualizar();
 	actualizarProyecto();
 }
 function actualizar(){
+	$('#resultadoId').hide();
 	if(currentProyecto){
 		$('#currentProyecto').text(currentProyecto.nombre +"-"+currentProyecto.id);
 	}else{
 		$('#currentProyecto').text('');
 	}
 	if(currentCodigo){
+		
 		$('#codigoNombreId').text(currentCodigo.nombre);
-   	    $('#codigoAreaId').val(currentCodigo.code);
+   	    // $('#codigoAreaId').val(currentCodigo.code);
+		editorCode.getDoc().setValue(currentCodigo.code!=null?currentCodigo.code:'');
    	    if(currentCodigo.test){
    	    	$('#testNombreId').text(currentCodigo.test.nombre);
-   	   	    $('#testAreaId').val(currentCodigo.test.code);
+   	   	    // $('#testAreaId').val(currentCodigo.test.code);
+   	    	editorTest.getDoc().setValue(currentCodigo.test.code!=null?currentCodigo.test.code:'');
    	    }else{
    	     $('#testNombreId').text('');
-    	    $('#testAreaId').val('');
+    	 //$('#testAreaId').val('');
+   	     editorTest.getDoc().setValue('');
+   	   
    	    }
 	}else{
 		$('#codigoNombreId').text('');
-   	    $('#codigoAreaId').val('');
+   	    // $('#codigoAreaId').val('');
+		editorCode.getDoc().setValue('');
    	    $('#testNombreId').text('');
-   	    $('#testAreaId').val('');
+   	    editorTest.getDoc().setValue('');
 	}
 	if(currentStatusMsg){
 		$('#currentStatusMsgId').text(currentStatusMsg);
@@ -62,10 +94,10 @@ function actualizarProyecto(){
 function actualizarProyectos(){
 	actualizar();
 	if(currentUser)getProyectos();
+	
 }
 
 function getCodigo(id){
-	
 	   jQuery.ajax({
 	         type: "GET",
 	         url: "v1/codigos/"+id,
@@ -108,7 +140,6 @@ function borrarCodigo(){
 	
 }
 function executeCodigo(){
-	
 	   jQuery.ajax({
 	         type: "GET",
 	         url: "v1/codigos/"+currentCodigo.id+"/ejecutar",
@@ -117,6 +148,7 @@ function executeCodigo(){
 	         dataType: "json",
 	         success: function (resultado, status, jqXHR) {
 	        	 $('#resultadoId').val(resultado.resultado);
+	        	 $('#resultadoId').show();
 	         },
 	         error: function (jqXHR, status) {
 	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
@@ -127,7 +159,6 @@ function executeCodigo(){
 	
 }
 function revisarCodigo(){
-	
 	   jQuery.ajax({
 	         type: "GET",
 	         url: "v1/codigos/"+currentCodigo.id+"/revisar",
@@ -147,7 +178,6 @@ function revisarCodigo(){
 }
 
 function createCodigo(nombre,descripcion){
-	
 	   jQuery.ajax({
 	         type: "POST",
 	         url: "v1/proyectos/"+currentProyecto.id+"/codigos",
@@ -202,7 +232,6 @@ function createProyecto(nombre,descripcion){
 }
 
 function getProyectos(){
-	
 	   jQuery.ajax({
 	         type: "GET",
 	         url: "v1/proyectos",
@@ -254,27 +283,29 @@ function treeProyectos(proyectos){
 		if(proyectos[i].codigos && proyectos[i].codigos.length>0){
 		for (var j=0; j < proyectos[i].codigos.length; j++){
 			console.log(proyectos[i].codigos[j].nombre);
-			codigos_temp.push({label: proyectos[i].codigos[j].nombre+"-"+proyectos[i].codigos[j].id,
-				id:proyectos[i].codigos[j].id,
+			codigos_temp.push({label: proyectos[i].codigos[j].nombre+"-c"+proyectos[i].codigos[j].id,
+				id:"c"+proyectos[i].codigos[j].id,
+				idd:proyectos[i].codigos[j].id,
 				call:cambiarCodigo});
 		}
 		}
 		var temp={
-                label: proyectos[i].nombre +"-"+proyectos[i].id,
-                id : proyectos[i].id,
+                label: proyectos[i].nombre +"-p"+proyectos[i].id,
+                id : "p"+proyectos[i].id,
+                idd : proyectos[i].id,
                 type:'PADRE',
-                call:cambiarProyecto,
+                call: function(){},
                 children: codigos_temp
             };
 		o.push(temp);
 		};
 		
 		 $('#tree1').tree('loadData', o);
+		 treeSelectCodigoActivo();
 		return o;
 	
 }
 function getProyecto(id){
-	
 	   jQuery.ajax({
 	         type: "GET",
 	         url: "v1/proyectos/"+id,
@@ -296,14 +327,11 @@ function getProyecto(id){
 	
 }
 function cambiarCodigo(node){
-	getCodigo(node.id);
-	getProyecto(node.parent.id);
+	getCodigo(node.idd);
+	getProyecto(node.parent.idd);
 	
 }
-function cambiarProyecto(node){
-	getProyecto(node.id);
-	
-}
+
 
 function createUsuario(nombre,password){
 	var nuevo={id:"","nombre":nombre,"password":password};
@@ -353,11 +381,11 @@ function loginUsuario(nombre,password){
 }
 
 function saveCodigo(){
-	   currentCodigo.code=$("#codigoAreaId").val();
+	   currentCodigo.code=editorCode.getDoc().getValue();
 	   if(!currentCodigo.test){
 		   currentCodigo.test={};  
 	   }
-	   currentCodigo.test.code=$("#testAreaId").val();
+	   currentCodigo.test.code= editorTest.getDoc().getValue();
 	   currentCodigo.test.nombre="test."+currentCodigo.nombre;
 	   
 	   jQuery.ajax({
