@@ -12,7 +12,8 @@
     <tx:annotation-driven />
     <context:annotation-config />
     <context:component-scan base-package="uned.dlr.pfc.controller"/>
- 
+    
+     <bean class="com.mangofactory.swagger.configuration.SpringSwaggerConfig" />
      <bean id="codigoDao" class="uned.dlr.pfc.dao.CodigoDao" />
      <bean id="pfcTestDao" class="uned.dlr.pfc.dao.PfcTestDao" />
      <bean id="userDao" class="uned.dlr.pfc.dao.UserDao" />
@@ -45,7 +46,7 @@
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/pfc" />
 		<property name="username" value="root" />
-		<property name="password" value="" />
+		<property name="password" value="buendia" />
 	</bean>
  
     <bean id="entityManagerFactory"

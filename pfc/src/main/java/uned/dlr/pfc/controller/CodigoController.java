@@ -122,7 +122,7 @@ public class CodigoController {
 	@RequestMapping(value = "/codigos", method = RequestMethod.POST)
 	public ResponseEntity<?> createCodigo(@RequestHeader("Authorization") String authorization,@Valid @RequestBody Codigo codigo) {
 		User user=checkAutenticacion(authorization);
-		codigoService.actualizar(codigo);
+		codigoService.actualizarCheckPermisos(codigo,user);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newCodigoUri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(codigo.getId()).toUri();

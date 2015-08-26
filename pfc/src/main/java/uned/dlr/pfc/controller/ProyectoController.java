@@ -25,6 +25,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import uned.dlr.pfc.model.Codigo;
 import uned.dlr.pfc.model.Proyecto;
 import uned.dlr.pfc.model.User;
+import uned.dlr.pfc.model.WhatToShareEnum;
 import uned.dlr.pfc.service.CodigoServiceIF;
 import uned.dlr.pfc.service.ProyectoServiceIF;
 import uned.dlr.pfc.service.UserServiceIF;
@@ -107,13 +108,14 @@ public class ProyectoController {
 		return new ResponseEntity<>(users,HttpStatus.OK);
 	}
 	@RequestMapping(value = "/proyectos/{proyectoId}/codigos/{codigoId}/users", method = RequestMethod.POST)
-	public ResponseEntity<?> compartirCodigoConUsuario(@RequestHeader("Authorization") String authorization,@PathVariable Long proyectoId,@PathVariable Long codigoId,@RequestBody String nombreUsuario) throws Exception {
+	public ResponseEntity<?> compartirCodigoConUsuario(@RequestHeader("Authorization") String authorization,@PathVariable Long proyectoId,@PathVariable Long codigoId,@RequestBody CompartirData data) throws Exception {
 		User user=checkAutenticacion(authorization);
 		existeProyectoYEstaAutorizado(proyectoId,user);
 		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
-		User user2=userService.findPorNombre(nombreUsuario);
+		User user2=userService.findPorNombre(data.getNombre());
 		if(user2==null) throw new BadOperationException("Usuario a compartir no existe");
-        codigoService.compartir(codigo, user, user2, "Compartido por " + user.getNombre());
+        codigo.setWhatToShare(data.toEnumWhatToShare());
+		codigoService.compartir(codigo, user, user2, "Compartido por " + user.getNombre());
         codigo = codigoService.getCodigo(codigoId);
 		return new ResponseEntity<>(codigo,HttpStatus.OK);
 	}
@@ -175,5 +177,7 @@ public class ProyectoController {
 		}
 		return user;
 	}
+	
+	
 
 }

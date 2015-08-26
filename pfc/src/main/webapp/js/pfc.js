@@ -48,6 +48,7 @@ function actualizarCodigo(){
 	actualizarProyecto();
 }
 function actualizar(){
+	testCodigo();
 	$('#resultadoId').hide();
 	if(currentProyecto){
 		$('#currentProyecto').text(currentProyecto.nombre +"-"+currentProyecto.id);
@@ -410,13 +411,13 @@ function saveCodigo(){
 	   });
 	
 }
-function compartirCodigo(nombreUsuario){
+function compartirCodigo(nombreUsuario,whatToShare){
 	    jQuery.ajax({
 	         type: "POST",
 	         url: "v1/proyectos/"+currentProyecto.id+"/codigos/"+currentCodigo.id+"/users/",
 	         contentType: "application/json; charset=utf-8",
 	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },		        
-	         data: nombreUsuario,
+	         data: [nombreUsuario,whatToShare],
 	         dataType: "json",
 	         success: function (codigo, status, jqXHR) {
 	        	 currentStatusMsg="Compartido "+codigo.nombre +" con usuario " + nombreUsuario;

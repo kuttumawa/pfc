@@ -9,6 +9,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import uned.dlr.pfc.model.Codigo;
 import uned.dlr.pfc.model.PfcTest;
+import uned.dlr.pfc.model.User;
+import uned.dlr.pfc.model.WhatToShareEnum;
 import uned.dlr.pfc.service.CodigoServiceIF;
 
 public class TestCodigo {
@@ -69,6 +71,38 @@ public class TestCodigo {
 		assertNotNull(codigoService.getCodigo(nuevoCodigo.getId()));
 
 	}
+	
+	@Test
+	public void noSePermiteAlterarCodeDeUnCompartidoComoTest() throws Exception {
+		CodigoServiceIF codigoService = (CodigoServiceIF) context.getBean("codigoService");
+		Codigo nuevoCodigo = new Codigo("NuevoCodigo");
+		nuevoCodigo.addPropietario(13L);
+		nuevoCodigo.setCode("No Cambiar");
+		nuevoCodigo.setTest(new PfcTest());
+		nuevoCodigo.getTest().setCode("Si puede Cambiar");
+		nuevoCodigo.setWhatToShare(WhatToShareEnum.test);
+		nuevoCodigo = codigoService.actualizar(nuevoCodigo);
+		
+		assertTrue(nuevoCodigo.getPropietarios().size() > 0);
+		assertTrue(nuevoCodigo.getPropietarios().contains(13L));
+		User userCompartir = new User();
+		userCompartir.setId(66L);
+		nuevoCodigo.addPropietario(userCompartir.getId());
+		nuevoCodigo = codigoService.actualizar(nuevoCodigo);
+		//intentamos cambiar code
+		nuevoCodigo.setCode("CAMBIO");
+		nuevoCodigo.getTest().setCode("CAMBIO");
+		codigoService.actualizarCheckPermisos(nuevoCodigo, userCompartir);
+		nuevoCodigo=codigoService.getCodigo(nuevoCodigo.getId());
+		assertNotEquals(nuevoCodigo.getCode(),"CAMBIO");
+		assertEquals(nuevoCodigo.getTest().getCode(),"CAMBIO");
+		
+		
+		assertNotNull(codigoService.getCodigo(nuevoCodigo.getId()));
+
+	}
+	
+	
 	final String CODIGO_2="function v(){return 'Hello, Rhino';};var s = 'Hello, Rhino'; s;";
 	@Test
 	public void testEjecutarCodigo() throws Exception {

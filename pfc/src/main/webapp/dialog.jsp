@@ -106,6 +106,7 @@
     		dialogSignup.dialog( "close" );
     	
         }else if (x==5){//sign up
+        	var whattoshare=($('input:radio[name=sharing]:checked').val());
   		    compartirCodigo(share_user.val());
   		    dialogShare.dialog( "close" );
   	    }
@@ -339,9 +340,23 @@
       <div class="validateTips"></div>
       <label for="share_user">Usuario</label>
       <input type="text" name="share_user" id="share_user"  class="text ui-widget-content ui-corner-all">
-      
-      <!-- Allow form submission with keyboard without duplicating the dialog button -->
-      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+      <div style="margin-top: 10px;">Compartir</div>
+      <div> <input style="display:inline" type = "radio"
+                 name = "sharing"
+                 id = "sizeSmall"
+                 value = "test"
+                 checked = "checked" />Test</input>
+                 <input style="display:inline" type = "radio"
+                 name = "sharing"
+                 id = "sizeSmall"
+                 value = "code"/>Código</input>
+                 <input style="display:inline" type = "radio"
+                 name = "sharing"
+                 id = "sizeSmall"
+                 value = "both"/>Ambos</input>
+          
+     </div>          
+       <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
     </fieldset>
   </form>
 </div>

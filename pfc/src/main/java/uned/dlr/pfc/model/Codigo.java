@@ -3,6 +3,7 @@ package uned.dlr.pfc.model;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -33,7 +34,9 @@ public class Codigo {
 	@OneToOne
 	PfcTest test;
 	@ElementCollection(fetch=FetchType.EAGER)
-	Set<Long> propietarios;
+	List<Long> propietarios;
+	WhatToShareEnum whatToShare=WhatToShareEnum.both;
+	
 	
 	
 	
@@ -79,9 +82,15 @@ public class Codigo {
 	}
 	public void addPropietario(Long proyectoId) {
 		if(propietarios==null){
-			propietarios=new HashSet<Long>();
+			propietarios=new ArrayList<Long>();
 		}
 		propietarios.add(proyectoId);
+	}
+	public WhatToShareEnum getWhatToShare() {
+		return whatToShare;
+	}
+	public void setWhatToShare(WhatToShareEnum whatToShare) {
+		this.whatToShare = whatToShare;
 	}
 	@Override
 	public String toString() {
@@ -99,10 +108,10 @@ public class Codigo {
 		builder.append("]");
 		return builder.toString();
 	}
-	public Set<Long> getPropietarios() {
-		return propietarios==null?new HashSet<Long>():propietarios;
+	public List<Long> getPropietarios() {
+		return propietarios==null?new ArrayList<Long>():propietarios;
 	}
-	public void setPropietarios(Set<Long> propietarios) {
+	public void setPropietarios(List<Long> propietarios) {
 		this.propietarios = propietarios;
 	}
 	
