@@ -105,9 +105,9 @@
     		createUsuario(signup_user.val(),signup_password.val());
     		dialogSignup.dialog( "close" );
     	
-        }else if (x==5){//sign up
+        }else if (x==5){//share codigo
         	var whattoshare=($('input:radio[name=sharing]:checked').val());
-  		    compartirCodigo(share_user.val());
+  		    compartirCodigo(share_user.val(),whattoshare);
   		    dialogShare.dialog( "close" );
   	    }
            
@@ -211,55 +211,65 @@
 
    
         $( "#create-proyecto" ).button({
-          text: true,
+          text: false,
+          label: 'Nuevo Proyecto',
           icons: {
-            primary: "ui-icon-circle-plus"
-          }
-        });
-        $( "#create-codigo" ).button({
-          text: true,
-          icons: {
-            primary: "ui-icon-circle-plus"
+            primary: "ui-icon-folder-collapsed"
           }
         });
         $( "#delete-proyecto" ).button({
-            text: true,
+            text: false,
+            label: 'Eliminar Proyecto',
             icons: {
-              primary: "ui-icon-circle-minus"
+              primary: "ui-icon-trash"
             }
           });
+        $( "#create-codigo" ).button({
+          text: false,
+          label: 'Nuevo Código',
+          icons: {
+            primary: "ui-icon-document"
+          }
+        });
+       
           $( "#delete-codigo" ).button({
-            text: true,
+            text: false,
+            label: 'Delete Código',
             icons: {
-              primary: "ui-icon-circle-minus"
+              primary: "ui-icon-close"
             }
           });
         $( "#saveButton" ).button({
-            text: true,
+            text: false,
+            label: 'Grabar',
             icons: {
               primary: "ui-icon-disk"
             }
           });
         $( "#executeButton" ).button({
-            text: true,
+            text: false,
+            label: 'Ejecutar',
             icons: {
-              primary: "ui-icon-play"
+              primary: "ui-icon-gear"
             }
           });
         $( "#revisarButton" ).button({
-            text: true,
+            text: false,
+            label: 'Revisar',
             icons: {
-              primary: "ui-icon-play"
+              primary: "ui-icon-check"
             }
           });
         $( "#runTestButton" ).button({
-            text: true,
+            text: false,
+            label: 'Run Test',
             icons: {
               primary: "ui-icon-play"
             }
           });
         $( "#shareButton" ).button({
-            text: true,
+            text: false,
+            label: 'Compartir Código',
             icons: {
               primary: "ui-icon-person"
             }

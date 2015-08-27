@@ -10,7 +10,7 @@ function init(){
 	 $('#resultadoId').hide();
 	 $('#tree1').tree({
 	        data: [],
-	        autoOpen:0
+	        autoOpen:false
 	    });
 	 $('#tree1').bind(
 			    'tree.click',
@@ -39,41 +39,84 @@ function init(){
 		  });
 }
 function treeSelectCodigoActivo(){
-	if(!currentCodigo) return;
-	var node = $('#tree1').tree('getNodeById', 'c'+currentCodigo.id);
-	$('#tree1').tree('selectNode', node);	
+	if(currentCodigo){
+	  var node = $('#tree1').tree('getNodeById', 'c'+currentCodigo.id);
+	  $('#tree1').tree('selectNode', node);	
+	}
+}
+function treeMarkProyectoActivo(){
+	if(currentProyecto){
+	  var node = $('#tree1').tree('getNodeById', 'c'+currentProyecto.id);
+	  $('#tree1').tree('selectNode', node);	
+	}
 }
 function actualizarCodigo(){
 	actualizar();
 	actualizarProyecto();
 }
+function closeTree(){
+	 var $tree = $('#tree1');
+	 var tree = $tree.tree('getTree');
+	  tree.iterate(function(node) {
+	    if (node.hasChildren()) {
+	      $tree.tree('closeNode', node, true);
+	    }
+	    return true;
+	  });
+}
+function openTree(){
+	 var $tree = $('#tree1');
+	 var tree = $tree.tree('getTree');
+	  tree.iterate(function(node) {
+	    if (node.hasChildren()) {
+	      $tree.tree('openNode', node, true);
+	    }
+	    return true;
+	  });
+}
+
+function enableDisabledEditor(){
+	 var owner=false;
+	 if(currentUser.id && currentUser.id==currentCodigo.propietarios[0]){
+		 owner=true;
+	 }
+	 if(!owner && currentCodigo.whatToShare==="test")   editorCode.setOption("readOnly", true);
+	 else if(!owner && currentCodigo.whatToShare==="code")   editorTest.setOption("readOnly", true);
+	 else{
+	    	editorCode.setOption("readOnly", false);
+	    	editorTest.setOption("readOnly", false);
+	    }
+}
 function actualizar(){
 	testCodigo();
+	closeTree();
+	   
 	$('#resultadoId').hide();
 	if(currentProyecto){
 		$('#currentProyecto').text(currentProyecto.nombre +"-"+currentProyecto.id);
+		var node = $('#tree1').tree('getNodeById', 'p'+currentProyecto.id);
+		if(node)$('#tree1').tree('openNode', node, true);
 	}else{
 		$('#currentProyecto').text('');
 	}
 	if(currentCodigo){
-		
+		enableDisabledEditor();
 		$('#codigoNombreId').text(currentCodigo.nombre);
-   	    // $('#codigoAreaId').val(currentCodigo.code);
-		editorCode.getDoc().setValue(currentCodigo.code!=null?currentCodigo.code:'');
-   	    if(currentCodigo.test){
+   	    editorCode.getDoc().setValue(currentCodigo.code!=null?currentCodigo.code:'');
+    	if(currentCodigo.test){
    	    	$('#testNombreId').text(currentCodigo.test.nombre);
    	   	    // $('#testAreaId').val(currentCodigo.test.code);
    	    	editorTest.getDoc().setValue(currentCodigo.test.code!=null?currentCodigo.test.code:'');
    	    }else{
    	     $('#testNombreId').text('');
-    	 //$('#testAreaId').val('');
-   	     editorTest.getDoc().setValue('');
+    	 editorTest.getDoc().setValue('');
    	   
    	    }
 	}else{
 		$('#codigoNombreId').text('');
-   	    // $('#codigoAreaId').val('');
-		editorCode.getDoc().setValue('');
+   	    editorCode.getDoc().setValue('');
+   	    editorCode.setOption("readOnly", false);
+    	editorTest.setOption("readOnly", false);
    	    $('#testNombreId').text('');
    	    editorTest.getDoc().setValue('');
 	}
@@ -295,7 +338,7 @@ function treeProyectos(proyectos){
                 id : "p"+proyectos[i].id,
                 idd : proyectos[i].id,
                 type:'PADRE',
-                call: function(){},
+                call: cambiarProyecto,
                 children: codigos_temp
             };
 		o.push(temp);
@@ -330,6 +373,11 @@ function getProyecto(id){
 function cambiarCodigo(node){
 	getCodigo(node.idd);
 	getProyecto(node.parent.idd);
+	
+}
+function cambiarProyecto(node){
+	currentCodigo=null;
+	getProyecto(node.idd);
 	
 }
 
@@ -417,7 +465,7 @@ function compartirCodigo(nombreUsuario,whatToShare){
 	         url: "v1/proyectos/"+currentProyecto.id+"/codigos/"+currentCodigo.id+"/users/",
 	         contentType: "application/json; charset=utf-8",
 	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },		        
-	         data: [nombreUsuario,whatToShare],
+	         data: JSON.stringify({"nombre":nombreUsuario,"whatToShare":whatToShare}),
 	         dataType: "json",
 	         success: function (codigo, status, jqXHR) {
 	        	 currentStatusMsg="Compartido "+codigo.nombre +" con usuario " + nombreUsuario;
