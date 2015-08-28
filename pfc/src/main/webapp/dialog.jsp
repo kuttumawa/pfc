@@ -274,6 +274,20 @@
               primary: "ui-icon-person"
             }
           });
+        $( "#minificarButton" ).button({
+            text: false,
+            label: 'Minificar',
+            icons: {
+              primary: "ui-icon-document-b"
+            }
+          });
+        $( "#optimizarButton" ).button({
+            text: false,
+            label: 'Optimizar',
+            icons: {
+              primary: "ui-icon-lightbulb"
+            }
+          });
         
       
 

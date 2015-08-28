@@ -211,6 +211,45 @@ function revisarCodigo(){
              dataType: "json",
 	         success: function (resultado, status, jqXHR) {
 	        	 $('#resultadoId').val(resultado.resultado);
+	        	 $('#resultadoId').show();
+	         },
+	         error: function (jqXHR, status) {
+	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
+	        	 console.log(currentStatusMsg);
+	        	 actualizar();
+	         }
+	   });
+	
+}
+function minificarCodigo(){
+	   jQuery.ajax({
+	         type: "GET",
+	         url: "v1/codigos/"+currentCodigo.id+"/minificar",
+	         contentType: "application/json; charset=utf-8",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },
+          dataType: "json",
+	         success: function (resultado, status, jqXHR) {
+	        	 $('#resultadoId').val(resultado.resultado);
+	        	 $('#resultadoId').show();
+	         },
+	         error: function (jqXHR, status) {
+	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
+	        	 console.log(currentStatusMsg);
+	        	 actualizar();
+	         }
+	   });
+	
+}
+function optimizarCodigo(){
+	   jQuery.ajax({
+	         type: "GET",
+	         url: "v1/codigos/"+currentCodigo.id+"/optimizar",
+	         contentType: "application/json; charset=utf-8",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },
+       dataType: "json",
+	         success: function (resultado, status, jqXHR) {
+	        	 $('#resultadoId').val(resultado.resultado);
+	        	 $('#resultadoId').show();
 	         },
 	         error: function (jqXHR, status) {
 	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;

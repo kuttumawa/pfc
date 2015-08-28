@@ -15,6 +15,8 @@ public class CodigoServiceImp implements CodigoServiceIF {
 	private ProyectoDao proyectoDao;
 	private ExecutorIF executor;
 	private ExecutorIF lint;
+	private ExecutorIF minificador;
+	private ExecutorIF optimizador;
 
 	public ExecutorIF getLint() {
 		return lint;
@@ -48,8 +50,14 @@ public class CodigoServiceImp implements CodigoServiceIF {
 	}
 
 	public String minificar(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		Codigo codigo = codigoDao.getCodigo(id);
+		return minificador.execute(codigo.getCode());
+		
+	}
+	public String optimizar(Long id) {
+		Codigo codigo = codigoDao.getCodigo(id);
+		return optimizador.execute(codigo.getCode());
+		
 	}
 
 	public String revisar(Long id) {
@@ -112,6 +120,22 @@ public class CodigoServiceImp implements CodigoServiceIF {
 			
 			actualizar(codigo);
 		}
+	}
+
+	public ExecutorIF getMinificador() {
+		return minificador;
+	}
+
+	public void setMinificador(ExecutorIF minificador) {
+		this.minificador = minificador;
+	}
+
+	public ExecutorIF getOptimizador() {
+		return optimizador;
+	}
+
+	public void setOptimizador(ExecutorIF optimizador) {
+		this.optimizador = optimizador;
 	}
 
 }

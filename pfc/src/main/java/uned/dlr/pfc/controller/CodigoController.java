@@ -98,6 +98,25 @@ public class CodigoController {
 		resultado.setResultado(codigoService.ejecutar(codigoId));
 		return new ResponseEntity<Resultado>(resultado, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/codigos/{codigoId}/minificar", method = RequestMethod.GET)
+	public ResponseEntity<Resultado> minificarCodigo(@RequestHeader("Authorization") String authorization,@PathVariable Long codigoId) {
+		User user=checkAutenticacion(authorization);
+		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
+		Resultado resultado = new Resultado();
+		resultado.setCode(codigo);
+		resultado.setResultado(codigoService.minificar(codigoId));
+		return new ResponseEntity<Resultado>(resultado, HttpStatus.OK);
+	}
+	@RequestMapping(value = "/codigos/{codigoId}/optimizar", method = RequestMethod.GET)
+	public ResponseEntity<Resultado> optimizarCodigo(@RequestHeader("Authorization") String authorization,@PathVariable Long codigoId) {
+		User user=checkAutenticacion(authorization);
+		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
+		Resultado resultado = new Resultado();
+		resultado.setCode(codigo);
+		resultado.setResultado(codigoService.optimizar(codigoId));
+		return new ResponseEntity<Resultado>(resultado, HttpStatus.OK);
+	}
 
 	@RequestMapping(value = "/codigos/{codigoId}", method = RequestMethod.DELETE)
 	public ResponseEntity<Codigo> borrarCodigo(@RequestHeader("Authorization") String authorization,@PathVariable Long codigoId)
@@ -111,12 +130,15 @@ public class CodigoController {
 
 
 	@RequestMapping(value = "/codigos/{codigoId}/revisar", method = RequestMethod.GET)
-	public ResponseEntity<String> lintCodigo(@RequestHeader("Authorization") String authorization,@PathVariable Long codigoId)
+	public ResponseEntity<Resultado> lintCodigo(@RequestHeader("Authorization") String authorization,@PathVariable Long codigoId)
 			throws Throwable {
 		User user=checkAutenticacion(authorization);
 		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
-		String resultado = codigoService.revisar(codigoId);
-		return new ResponseEntity<String>(resultado, HttpStatus.OK);
+		String res = codigoService.revisar(codigoId);
+		Resultado resultado=new Resultado();
+		resultado.setCode(codigo);
+		resultado.setResultado(res);
+		return new ResponseEntity<Resultado>(resultado, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/codigos", method = RequestMethod.POST)

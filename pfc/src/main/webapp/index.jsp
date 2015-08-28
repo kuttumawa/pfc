@@ -32,6 +32,8 @@ $(function(){init();});
 <button style="font-size: .7em;"  id="revisarButton" onClick="revisarCodigo();">Revisar</button>
 <button style="font-size: .7em;"  id="runTestButton" onClick="testCodigo();">Test</button>
 <button style="font-size: .7em;"  id="shareButton">Compartir</button>
+<button style="font-size: .7em;"  id="minificarButton" onClick="minificarCodigo();">Minificar</button>
+<button style="font-size: .7em;"  id="optimizarButton" onClick="optimizarCodigo();">Optimizar</button>
 
 <!-- <div id="info">Proyecto Actual : <span id="currentProyecto"></span><span id="currentStatusMsgId"></span></div> -->
 </span>
@@ -47,7 +49,7 @@ $(function(){init();});
 <span>Código: <span id="codigoNombreId"></span></span>
 <p>
 <textarea id="codigoAreaId" rows="20" cols="65"></textarea>
-<textarea id="resultadoId" rows="5" cols="65" ></textarea>
+<textarea id="resultadoId" rows="5" cols="68" ></textarea>
 </p>
 </div>
 
