@@ -257,7 +257,7 @@
             text: false,
             label: 'Revisar',
             icons: {
-              primary: "ui-icon-check"
+              primary: "ui-icon-search"
             }
           });
         $( "#runTestButton" ).button({
@@ -286,6 +286,13 @@
             label: 'Optimizar',
             icons: {
               primary: "ui-icon-lightbulb"
+            }
+          });
+        $( "#cambiarEstadoPasssedButton" ).button({
+            text: false,
+            label: 'Marcar Test Pasado/No Pasado',
+            icons: {
+              primary: "ui-icon-check"
             }
           });
         

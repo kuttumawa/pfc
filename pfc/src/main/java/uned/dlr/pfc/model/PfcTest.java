@@ -16,7 +16,7 @@ public class PfcTest {
 	String nombre;
 	@Column(length=5000)
 	String code;
-	
+	boolean pasado;
 	
 	
 	public PfcTest() {
@@ -45,16 +45,24 @@ public class PfcTest {
 	public void setCode(String code) {
 		this.code = code;
 	}
+	
+	public boolean isPasado() {
+		return pasado;
+	}
+	public void setPasado(boolean pasado) {
+		this.pasado = pasado;
+	}
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Test [id=");
-		builder.append(id);
-		builder.append(", nombre=");
-		builder.append(nombre);
-		builder.append(", code=");
-		builder.append(code);
-		builder.append("]");
+		builder.append("PfcTest [");
+		if (id != null)
+			builder.append("id=").append(id).append(", ");
+		if (nombre != null)
+			builder.append("nombre=").append(nombre).append(", ");
+		if (code != null)
+			builder.append("code=").append(code).append(", ");
+		builder.append("pasado=").append(pasado).append("]");
 		return builder.toString();
 	}
 	

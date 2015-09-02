@@ -5,12 +5,22 @@ var currentUser;
 var currentProyecto;
 var editorCode;
 var editorTest;
+var timeoutId;
+var autosafe=false;
 
 function init(){
 	 $('#resultadoId').hide();
 	 $('#tree1').tree({
 	        data: [],
-	        autoOpen:false
+	        autoOpen:false,
+	        onCreateLi: function(node, $li) {
+	        	if(node.type) return;
+		        if(node.passed)
+	        	   $li.find('.jqtree-title').before('<img src="images/check-icon.png"/>');
+		        else
+		           $li.find('.jqtree-title').before('<img src="images/cancel-icon.png"/>');
+		        	
+		    }
 	    });
 	 $('#tree1').bind(
 			    'tree.click',
@@ -20,6 +30,7 @@ function init(){
 			        node.call(node);
 			    }
 			);
+
 	 CodeMirror.commands.autocomplete = function(cm) {
 	        cm.showHint({hint: CodeMirror.hint.anyword,hint:CodeMirror.hint.javascript});
 	      };
@@ -30,6 +41,22 @@ function init(){
 		    lint: true,
 		    extraKeys: {"Ctrl-Space": "autocomplete"}
 		  });
+	 editorCode.on("change", function(){
+		    console.log('editorCode Change');
+            if(!autosafe) return;
+		    clearTimeout(timeoutId);
+		    timeoutId = setTimeout(function() {
+		       saveCodigo(true);
+		    }, 3000);
+		});
+	 editorCode.on("focus", function(){
+		    console.log('editorCode focus');
+		    autosafe=true;
+		});
+	 editorCode.on("blur", function(){
+		    console.log('editorCode blur');
+		    autosafe=false;
+		});
 	 editorTest = CodeMirror.fromTextArea(document.getElementById("testAreaId"), {
 		    lineNumbers: true,
 		    mode: "javascript",
@@ -87,6 +114,15 @@ function enableDisabledEditor(){
 	    	editorTest.setOption("readOnly", false);
 	    }
 }
+
+function actualizarMin(){
+	testCodigo();
+	if(currentStatusMsg){
+		$('#currentStatusMsgId').text(currentStatusMsg);
+	}else{
+		$('#currentStatusMsgId').text('');
+	}
+}
 function actualizar(){
 	testCodigo();
 	closeTree();
@@ -127,8 +163,14 @@ function actualizar(){
 	}
 	if(currentUser){
 		$('#currentUser').text(currentUser.nombre);
+		$('#logintool').hide();
+		$('#currentUser').show();
+		
 	}else{
-		$('#currentUser').text('?');
+		$('#currentUser').text('');
+		$('#logintool').show();
+		$('#currentUser').hide();
+	
 	}
 }
 function actualizarProyecto(){
@@ -369,6 +411,7 @@ function treeProyectos(proyectos){
 			codigos_temp.push({label: proyectos[i].codigos[j].nombre+"-c"+proyectos[i].codigos[j].id,
 				id:"c"+proyectos[i].codigos[j].id,
 				idd:proyectos[i].codigos[j].id,
+				passed:proyectos[i].codigos[j].test.pasado,
 				call:cambiarCodigo});
 		}
 		}
@@ -446,7 +489,7 @@ function createUsuario(nombre,password){
 }
 function loginUsuario(nombre,password){
 	   jQuery.ajax({
-	         type: "POST",
+	         type: "GET",
 	         url: "v1/users/login",
 	         contentType: "application/json; charset=utf-8",
 	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(nombre + ":" + password)); },		        
@@ -468,7 +511,8 @@ function loginUsuario(nombre,password){
 	
 }
 
-function saveCodigo(){
+function saveCodigo(norefresh){
+	   if(!currentCodigo)return;
 	   currentCodigo.code=editorCode.getDoc().getValue();
 	   if(!currentCodigo.test){
 		   currentCodigo.test={};  
@@ -485,6 +529,30 @@ function saveCodigo(){
 	         dataType: "json",
 	         success: function (codigo, status, jqXHR) {
 	        	 currentStatusMsg="Grabado "+codigo.nombre;
+	        	 currentCodigo=codigo;
+	        	 if(!norefresh) actualizarCodigo();
+	        	 else actualizarMin();
+	        	 testCodigo();
+	         },
+
+	         error: function (jqXHR, status) {
+	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
+	        	 console.log(currentStatusMsg);
+	             actualizar();
+	         }
+	   });
+	
+}
+function cambiarEstadoPasssedCodigo(){
+	if(!currentCodigo)    return;
+	jQuery.ajax({
+	         type: "PUT",
+	         url: "v1/codigos/"+currentCodigo.id+"/cambiarestado",
+	         contentType: "application/json; charset=utf-8",
+	         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(currentUser.nombre + ":" + currentUser.password)); },		        
+	         dataType: "json",
+	         success: function (codigo, status, jqXHR) {
+	        	 currentStatusMsg="Cambiado estado "+codigo.nombre ;
 	        	 currentCodigo=codigo;
 	        	 actualizarCodigo();
 	        	 testCodigo();

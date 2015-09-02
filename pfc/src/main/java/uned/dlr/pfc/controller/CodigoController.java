@@ -142,7 +142,7 @@ public class CodigoController {
 	}
 
 	@RequestMapping(value = "/codigos", method = RequestMethod.POST)
-	public ResponseEntity<?> createCodigo(@RequestHeader("Authorization") String authorization,@Valid @RequestBody Codigo codigo) {
+	public ResponseEntity<?> saveCodigo(@RequestHeader("Authorization") String authorization,@Valid @RequestBody Codigo codigo) {
 		User user=checkAutenticacion(authorization);
 		codigoService.actualizarCheckPermisos(codigo,user);
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -152,6 +152,17 @@ public class CodigoController {
 		return new ResponseEntity<>(codigo, responseHeaders, HttpStatus.CREATED);
 	}
 
+	@RequestMapping(value = "/codigos/{codigoId}/cambiarestado", method = RequestMethod.PUT)
+	public ResponseEntity<?> cambiarEstadoTestPasado(@RequestHeader("Authorization") String authorization,@PathVariable Long codigoId) {
+		User user=checkAutenticacion(authorization);
+		Codigo codigo=existeCodigoYEstaAutorizado(codigoId,user);
+		codigoService.marcarCodigoPassedOrNotPassed(codigo,user,!codigo.getTest().isPasado());
+		HttpHeaders responseHeaders = new HttpHeaders();
+		URI newCodigoUri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(codigo.getId()).toUri();
+		responseHeaders.setLocation(newCodigoUri);
+		return new ResponseEntity<>(codigo, responseHeaders, HttpStatus.CREATED);
+	}
 
 
 	public static void main(String[] args) {

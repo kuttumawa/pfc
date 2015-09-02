@@ -1,5 +1,6 @@
 package uned.dlr.pfc.service;
 
+import uned.dlr.pfc.controller.AutorizacionNoValidaException;
 import uned.dlr.pfc.dao.CodigoDao;
 import uned.dlr.pfc.dao.ProyectoDao;
 import uned.dlr.pfc.model.Codigo;
@@ -136,6 +137,18 @@ public class CodigoServiceImp implements CodigoServiceIF {
 
 	public void setOptimizador(ExecutorIF optimizador) {
 		this.optimizador = optimizador;
+	}
+
+	@Override
+	public void marcarCodigoPassedOrNotPassed(Codigo codigo, User user,
+			boolean b) {
+		if (user.getId().equals(codigo.getPropietarios().get(0))) {
+			codigo.getTest().setPasado(b);
+			actualizar(codigo);
+		}else{
+			throw new AutorizacionNoValidaException("El usuario no tiene autorización para realizar la operación");
+		}
+		
 	}
 
 }

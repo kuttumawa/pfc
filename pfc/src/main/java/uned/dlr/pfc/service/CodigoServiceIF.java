@@ -17,6 +17,8 @@ public interface CodigoServiceIF {
 	public String ejecutar(String codigo);
 	public void actualizarCheckPermisos(Codigo codigo, User user);
 	public String optimizar(Long codigoId);
+	public void marcarCodigoPassedOrNotPassed(Codigo codigo, User user,
+			boolean b);
 	
 
 }

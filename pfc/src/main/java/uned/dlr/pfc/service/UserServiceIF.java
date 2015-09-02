@@ -13,5 +13,6 @@ public interface UserServiceIF {
 	public User find(String user,String pass);
 	public List<User> getAll(String filter);
 	public User findPorNombre(String filter);
+	public boolean existeUser(String nombre);
 
 }

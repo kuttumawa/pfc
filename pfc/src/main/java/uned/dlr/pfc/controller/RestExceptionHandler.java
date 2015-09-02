@@ -22,7 +22,7 @@ public class RestExceptionHandler {
 		errorDetail.setTimeStamp(new Date().getTime());
 		errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
 		errorDetail.setTitle("Recurso No encontrado");
-		errorDetail.setDetail(rnfe.getMessage());
+		errorDetail.setDetail(rnfe.getMessage()!=null?rnfe.getMessage():"Recurso no encontrado");
 		errorDetail.setDeveloperMessage(rnfe.getClass().getName());
 		return new ResponseEntity<>(errorDetail, null, HttpStatus.NOT_FOUND);
 	}
@@ -33,7 +33,7 @@ public class RestExceptionHandler {
 		errorDetail.setTimeStamp(new Date().getTime());
 		errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
 		errorDetail.setTitle("Sin Permisos para el recurso");
-		errorDetail.setDetail(rnfe.getMessage());
+		errorDetail.setDetail(rnfe.getMessage()!=null?rnfe.getMessage():"Mala autenticación");
 		errorDetail.setDeveloperMessage(rnfe.getClass().getName());
 		return new ResponseEntity<>(errorDetail, null, HttpStatus.FORBIDDEN);
 	}
@@ -44,7 +44,7 @@ public class RestExceptionHandler {
 		errorDetail.setTimeStamp(new Date().getTime());
 		errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
 		errorDetail.setTitle("No autenticado");
-		errorDetail.setDetail(rnfe.getMessage());
+		errorDetail.setDetail(rnfe.getMessage()!=null?rnfe.getMessage():"Mala  autorización");
 		errorDetail.setDeveloperMessage(rnfe.getClass().getName());
 		return new ResponseEntity<>(errorDetail, null, HttpStatus.FORBIDDEN);
 	}
@@ -55,7 +55,7 @@ public class RestExceptionHandler {
 		errorDetail.setTimeStamp(new Date().getTime());
 		errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
 		errorDetail.setTitle("Operación no permitida");
-		errorDetail.setDetail(rnfe.getMessage());
+		errorDetail.setDetail(rnfe.getMessage()!=null?rnfe.getMessage():"Operación no permitida");
 		errorDetail.setDeveloperMessage(rnfe.getClass().getName());
 		return new ResponseEntity<>(errorDetail, null, HttpStatus.INTERNAL_SERVER_ERROR);
 	}

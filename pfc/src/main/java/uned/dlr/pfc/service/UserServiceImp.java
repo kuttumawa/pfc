@@ -54,4 +54,10 @@ public class UserServiceImp implements UserServiceIF {
 		return null;
 	}
 
+	@Override
+	public boolean existeUser(String nombre) {
+		if( nombre==null || findPorNombre(nombre)!=null) return true;
+		return false;
+	}
+
 }

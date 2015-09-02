@@ -6,6 +6,7 @@ import java.util.List;
 import uned.dlr.pfc.dao.CodigoDao;
 import uned.dlr.pfc.dao.ProyectoDao;
 import uned.dlr.pfc.model.Codigo;
+import uned.dlr.pfc.model.PfcTest;
 import uned.dlr.pfc.model.Proyecto;
 
 public class ProyectoServiceImp implements ProyectoServiceIF{
@@ -21,6 +22,8 @@ public class ProyectoServiceImp implements ProyectoServiceIF{
 	public Proyecto addCodigo(Long proyectoId,Codigo codigo) {
 		Proyecto p=proyectoDao.getProyecto(proyectoId);
 		codigo.addPropietario(p.getUser().getId());
+		codigo.setTest(new PfcTest("test_"+codigo.getNombre()));
+		codigoDao.saveTest(codigo.getTest());
 		p.addCode(codigo);
 		codigoDao.save(codigo);
 		proyectoDao.save(p);

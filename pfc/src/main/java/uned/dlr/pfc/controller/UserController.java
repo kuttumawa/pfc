@@ -39,7 +39,7 @@ public class UserController {
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/users/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/users/login", method = RequestMethod.GET)
 	public ResponseEntity<User> getUserConPassword(@RequestHeader("Authorization") String authorization) {
 		User u = checkAutenticacion(authorization);
 		return new ResponseEntity<User>(u, HttpStatus.OK);
@@ -62,6 +62,7 @@ public class UserController {
 
 	@RequestMapping(value = "/users", method = RequestMethod.POST)
 	public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
+		if(userService.existeUser(user.getNombre())) throw new BadAutenticacionException("El usuario ya existe");
 		user = userService.crear(user);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newUserUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId())
@@ -89,16 +90,16 @@ public class UserController {
 		SpringApplication.run(UserController.class, args);
 	}
 	private User checkAutenticacion(String authorization) {
-		if(authorization==null || authorization.length()<1) throw new BadAutenticacionException("Error de autenticacion");
+		if(authorization==null || authorization.length()<1) throw new BadAutenticacionException();
 		byte[] decoded = Base64.decodeBase64(authorization.replace("Basic ", ""));
 		User user=null;
 		try {
 			String[] userPass=new String(decoded, "UTF-8").split(":");
 			user=userService.find(userPass[0], userPass[1]);
-			if(user==null) throw new BadAutenticacionException("Error de autenticacion");
+			if(user==null) throw new BadAutenticacionException("Usuario o password no válido");
 
 		}catch (Exception e){
-			throw new BadAutenticacionException("Error de autenticacion");
+			throw new BadAutenticacionException();
 		}
 		return user;
 	}
