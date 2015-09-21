@@ -316,6 +316,8 @@
   });
  
   </script>
+  
+<div style="display:none">
 <div id="dialog-form" title="Nuevo">
  
   <form>
@@ -331,6 +333,7 @@
   </form>
  
 </div>
+
 
 <div id="dialog-form-login" title="Entrar">
  <form>
@@ -390,4 +393,6 @@
        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
     </fieldset>
   </form>
+</div>
+
 </div>

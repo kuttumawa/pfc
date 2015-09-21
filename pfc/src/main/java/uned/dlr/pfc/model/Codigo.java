@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -34,6 +35,9 @@ public class Codigo {
 	@OneToOne
 	PfcTest test;
 	@ElementCollection(fetch=FetchType.EAGER)
+	 @CollectionTable(
+		        name = "codigo_propietarios"
+		    )
 	List<Long> propietarios;
 	WhatToShareEnum whatToShare=WhatToShareEnum.both;
 	

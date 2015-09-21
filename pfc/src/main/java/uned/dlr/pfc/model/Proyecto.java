@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -28,6 +29,7 @@ public class Proyecto {
 	
 	
 	@ManyToMany(fetch=FetchType.EAGER)
+	@JoinTable(name="proyecto_codigo")
 	List<Codigo> codigos;
 	
 	public Proyecto() {

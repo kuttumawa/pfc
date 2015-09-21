@@ -17,9 +17,9 @@ $(function(){init();});
 <div id="header">
 <span id=currentUser></span>
 <span id="logintool">
-<span id="loginId" style="cursor:pointer;" onclick="">login</span>/<span id="signupId" style="cursor:pointer;" onclick="">Signup</span>
+<span id="loginId" style="cursor:pointer;" onclick="">login</span>/<span id="signupId" style="cursor:pointer;" onclick="">SignUp</span>
 </span>
-<span style="margin-left:20px;float:left;font-size: 150%;">Pfc Behauvioral testing
+<span style="margin-left:20px;float:left;font-size: 150%;">BDD Testing Environment 
 <a style="margin-left:10px;font-size: 70%;color:blue;" target="_blank" href="v1/api/index.html">api</a></span>
 
 <span id="toolbar" style="margin-left:30px" class="ui-widget-header ui-corner-all">
@@ -67,14 +67,14 @@ $(function(){init();});
 
 
 
-<iframe id="testBrowser" style="margin-left:5px;border: 1px solid grey;" src="jasmineRunner.jsp" width="75%" height="300px" seamless>
+<iframe id="testBrowser" style="margin-left:5px;border: 1px solid grey;" src="jasmineRunner.jsp" width="68%" height="300px" seamless>
 </iframe>
 
 
 
 
 <div id="footer">
-Copyright © David LR
+About: This BDD Testing Environment is a prototype,for my final degree thesis in the Escuela Superior de Ingenieria Informática (UNED).It has no comercial purpose.&nbsp;<a href="davidlinaresrufo@gmail.com">David L.R</a>
 </div>
 
 

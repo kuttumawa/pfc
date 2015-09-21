@@ -408,7 +408,7 @@ function treeProyectos(proyectos){
 		if(proyectos[i].codigos && proyectos[i].codigos.length>0){
 		for (var j=0; j < proyectos[i].codigos.length; j++){
 			console.log(proyectos[i].codigos[j].nombre);
-			codigos_temp.push({label: proyectos[i].codigos[j].nombre+"-c"+proyectos[i].codigos[j].id,
+			codigos_temp.push({label: proyectos[i].codigos[j].nombre,
 				id:"c"+proyectos[i].codigos[j].id,
 				idd:proyectos[i].codigos[j].id,
 				passed:proyectos[i].codigos[j].test.pasado,
@@ -416,7 +416,7 @@ function treeProyectos(proyectos){
 		}
 		}
 		var temp={
-                label: proyectos[i].nombre +"-p"+proyectos[i].id,
+                label: proyectos[i].nombre,
                 id : "p"+proyectos[i].id,
                 idd : proyectos[i].id,
                 type:'PADRE',
