@@ -317,7 +317,8 @@ function createCodigo(nombre,descripcion){
 	         },
 
 	         error: function (jqXHR, status) {
-	        	 currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
+	        	// currentStatusMsg="Error: "+ jqXHR.status+ "-"+jqXHR.statusText;
+	        	 currentStatusMsg="Error: "+ jqXHR.responseJSON.detail;
 	        	 console.log(currentStatusMsg);
 	             actualizar();
 	         }

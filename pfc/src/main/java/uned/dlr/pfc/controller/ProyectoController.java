@@ -1,7 +1,10 @@
 package uned.dlr.pfc.controller;
 
+
+
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -18,14 +21,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import uned.dlr.pfc.model.Codigo;
 import uned.dlr.pfc.model.Proyecto;
 import uned.dlr.pfc.model.User;
-import uned.dlr.pfc.model.WhatToShareEnum;
 import uned.dlr.pfc.service.CodigoServiceIF;
 import uned.dlr.pfc.service.ProyectoServiceIF;
 import uned.dlr.pfc.service.UserServiceIF;
@@ -79,6 +80,10 @@ public class ProyectoController {
 	public ResponseEntity<?> createCodigoEnProyecto(@RequestHeader("Authorization") String authorization,@PathVariable Long proyectoId,@Valid @RequestBody Codigo codigo) {
 		User user=checkAutenticacion(authorization);
 		Proyecto proyecto=existeProyectoYEstaAutorizado(proyectoId,user);
+		for (Iterator<Codigo> it = proyecto.getCodigos().iterator(); it.hasNext(); ) {
+		        Codigo c = it.next();
+		        if(c.getNombre().equalsIgnoreCase(codigo.getNombre())) throw new BadOperationException("El nombre '"+ codigo.getNombre() +"' ya existe en el proyecto");
+		    }
 		proyectoService.addCodigo(proyectoId, codigo);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newProyectoUri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(codigo.getId())

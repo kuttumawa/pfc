@@ -81,12 +81,16 @@ public class ProyectoServiceImp implements ProyectoServiceIF{
 			Codigo c=it.next();
 			it.remove();
 			Codigo codigo=codigoDao.getCodigo(c.getId());
-			codigo.getPropietarios().remove(proyectoId);
-			if(codigo.getPropietarios().size()==0) codigoDao.deleteById(codigo.getId());
+			codigo.getPropietarios().remove(p.getUser().getId());
+			if(codigo.getPropietarios().size()==0){
+				proyectoDao.save(p);
+				codigoDao.deleteById(codigo.getId());
+			}
 			else{
 				codigoDao.save(codigo);
 			}
 		}
+		p=proyectoDao.getProyecto(proyectoId);
 		proyectoDao.save(p);
 		proyectoDao.deleteById(p.getId());
 	}

@@ -1,8 +1,10 @@
 package uned.dlr.pfc.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,7 +32,7 @@ public class Proyecto {
 	
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name="proyecto_codigo")
-	List<Codigo> codigos;
+	Set<Codigo> codigos;
 	
 	public Proyecto() {
 		super();
@@ -74,15 +76,15 @@ public class Proyecto {
 	}
 	
 	
-	public List<Codigo> getCodigos() {
+	public Set<Codigo> getCodigos() {
 		return codigos;
 	}
-	public void setCodigos(List<Codigo> codigos) {
+	public void setCodigos(Set<Codigo> codigos) {
 		this.codigos = codigos;
 	}
 	public void addCode(Codigo codigo) {
 		if(codigos==null){
-			codigos=new ArrayList<Codigo>();
+			codigos=new HashSet<Codigo>();
 		}
 		codigos.add(codigo);
 	}

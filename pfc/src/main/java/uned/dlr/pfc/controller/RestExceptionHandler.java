@@ -54,7 +54,7 @@ public class RestExceptionHandler {
 		ErrorDetail errorDetail = new ErrorDetail();
 		errorDetail.setTimeStamp(new Date().getTime());
 		errorDetail.setStatus(HttpStatus.NOT_FOUND.value());
-		errorDetail.setTitle("Operación no permitida");
+		errorDetail.setTitle(rnfe.getMessage()!=null?rnfe.getMessage():"Operación no permitida");
 		errorDetail.setDetail(rnfe.getMessage()!=null?rnfe.getMessage():"Operación no permitida");
 		errorDetail.setDeveloperMessage(rnfe.getClass().getName());
 		return new ResponseEntity<>(errorDetail, null, HttpStatus.INTERNAL_SERVER_ERROR);

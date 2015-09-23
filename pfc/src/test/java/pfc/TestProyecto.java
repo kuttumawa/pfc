@@ -2,6 +2,7 @@ package pfc;
 
 import static org.junit.Assert.*;
 
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.AfterClass;
@@ -54,7 +55,12 @@ public class TestProyecto  {
 		Codigo c1=codigoService.crear(new Codigo("factorial"));
 		proyectoService.addCodigo(p1.getId(),c1);
 		assertFalse(proyectoService.getProyecto(p1.getId()).getCodigos().isEmpty());
-		assertTrue(proyectoService.getProyecto(p1.getId()).getCodigos().get(0).getPropietarios().contains(p1.getId()));
+		
+		 for (Iterator<Codigo> it = proyectoService.getProyecto(p1.getId()).getCodigos().iterator(); it.hasNext(); ) {
+		        Codigo c = it.next();
+		        assertTrue(c.getPropietarios().contains(p1.getId()));
+		    }
+		
 	}
 	@Test
 	public void testBorrarProyectoSinCodigoCompartido() {
@@ -63,7 +69,10 @@ public class TestProyecto  {
 		Codigo c1=codigoService.crear(new Codigo("factorial"));
 		proyectoService.addCodigo(p1.getId(),c1);
 		assertFalse(proyectoService.getProyecto(p1.getId()).getCodigos().isEmpty());
-		assertTrue(proyectoService.getProyecto(p1.getId()).getCodigos().get(0).getPropietarios().contains(p1.getId()));
+		 for (Iterator<Codigo> it = proyectoService.getProyecto(p1.getId()).getCodigos().iterator(); it.hasNext(); ) {
+		        Codigo c = it.next();
+		        assertTrue(c.getPropietarios().contains(p1.getId()));
+		    }
 		
 		try {
 			proyectoService.borrarProyecto(p1.getId());
@@ -82,8 +91,11 @@ public class TestProyecto  {
 		Codigo c1=codigoService.crear(new Codigo("factorial"));
 		proyectoService.addCodigo(p1.getId(),c1);
 		assertFalse(proyectoService.getProyecto(p1.getId()).getCodigos().isEmpty());
-		assertTrue(proyectoService.getProyecto(p1.getId()).getCodigos().get(0).getPropietarios().contains(p1.getId()));
-		
+		 for (Iterator<Codigo> it = proyectoService.getProyecto(p1.getId()).getCodigos().iterator(); it.hasNext(); ) {
+		        Codigo c = it.next();
+		        assertTrue(c.getPropietarios().contains(p1.getId()));
+		    }
+			
 		User user2=userService.crear(new User("user2","pass2"));
 		codigoService.compartir(c1, p1.getUser(), user2, "Compartiendo "+c1.getNombre());
 		
